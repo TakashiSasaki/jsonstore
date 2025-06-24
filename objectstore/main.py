@@ -2,6 +2,12 @@
 
 import sqlite3
 import json
+import hashlib
+
+
+def _canonical_json(obj) -> str:
+    """Return canonical JSON string for hashing."""
+    return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 
 def create_object_table(conn: sqlite3.Connection, table_name: str = "objectstore"):
@@ -40,6 +46,30 @@ def insert_object(conn: sqlite3.Connection, canonical_json_sha1, obj: dict, tabl
             (canonical_json_sha1, key, value),
         )
     conn.commit()
+
+
+def insert_object_auto_hash(conn: sqlite3.Connection, obj: dict, table_name: str = "objectstore"):
+    """Insert object and compute canonical JSON SHA1 internally.
+
+    Parameters
+    ----------
+    conn : sqlite3.Connection
+        SQLite connection.
+    obj : dict
+        Object to store.
+    table_name : str, optional
+        Name of the table. Defaults to ``"objectstore"``.
+
+    Returns
+    -------
+    str
+        The computed SHA1 hash of the canonical JSON representation.
+    """
+
+    canonical_json = _canonical_json(obj)
+    canonical_json_sha1 = hashlib.sha1(canonical_json.encode("utf-8")).hexdigest()
+    insert_object(conn, canonical_json_sha1, obj, table_name=table_name)
+    return canonical_json_sha1
 
 
 def retrieve_object(conn: sqlite3.Connection, canonical_json_sha1, table_name: str = "objectstore"):
