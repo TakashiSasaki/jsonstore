@@ -117,9 +117,9 @@ def test_insert_array_auto_hash():
     computed_hash = insert_array_auto_hash(conn, arr)
     result = retrieve_array(conn, computed_hash)
 
-    expected_hash = hashlib.sha1(
-        json.dumps(arr, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-    ).hexdigest()
+    from canonicaljson import canonical_json
+
+    expected_hash = hashlib.sha1(canonical_json(arr).encode("utf-8")).hexdigest()
 
     assert computed_hash == expected_hash
     assert result == arr
