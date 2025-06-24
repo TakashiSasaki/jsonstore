@@ -7,6 +7,7 @@ from .table import (
     retrieve_json,
 )
 from .fts import create_json_fts
+from .store import JsonStore
 
 __all__ = [
     "create_json_table",
@@ -14,4 +15,5 @@ __all__ = [
     "insert_json_auto_hash",
     "retrieve_json",
     "create_json_fts",
+    "JsonStore",
 ]
