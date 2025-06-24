@@ -2,9 +2,15 @@ import os
 import sys
 import sqlite3
 import json
+import hashlib
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from objectstore.main import create_object_table, insert_object, retrieve_object
+from objectstore.main import (
+    create_object_table,
+    insert_object,
+    insert_object_auto_hash,
+    retrieve_object,
+)
 
 
 def test_object_storage():
@@ -68,4 +74,23 @@ def test_object_storage_various_types():
     assert result == data
     for key, val in data.items():
         assert type(result[key]) is type(val)
+    conn.close()
+
+
+def test_insert_object_auto_hash():
+    """Ensure insert_object_auto_hash computes SHA1 and stores object."""
+    obj = {"x": 1, "y": [True, False]}
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_object_table(conn)
+    computed_hash = insert_object_auto_hash(conn, obj)
+    result = retrieve_object(conn, computed_hash)
+
+    expected_hash = hashlib.sha1(
+        json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
+
+    assert computed_hash == expected_hash
+    assert result == obj
     conn.close()
