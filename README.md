@@ -98,6 +98,25 @@ print(restored)  # 元の辞書と同じ型・値で復元されます
 conn.close()
 ```
 
+### ObjectStore クラス
+
+辞書操作をより簡潔に行うためのラッパークラス `ObjectStore` も提供しています。
+
+```python
+import sqlite3
+from sqlite_store.objectstore.store import ObjectStore
+
+conn = sqlite3.connect("example.db")
+conn.row_factory = sqlite3.Row
+
+store = ObjectStore(conn)
+oid = store.insert_object_auto_hash({"x": 1, "y": True})
+restored = store.retrieve_object(oid)
+print(restored)
+
+conn.close()
+```
+
 ### canonical_json 関数
 
 オブジェクトを JSON Canonicalization Scheme (JCS) に従って文字列化する
