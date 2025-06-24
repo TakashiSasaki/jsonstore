@@ -1,7 +1,11 @@
-# test_main.py
+# test_arraystore.py
 
+import os
+import sys
 import sqlite3
 import json
+
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from arraystore.main import create_array_table, insert_array, retrieve_array
 
 
