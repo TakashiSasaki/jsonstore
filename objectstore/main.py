@@ -17,37 +17,37 @@ def create_object_table(conn: sqlite3.Connection, table_name: str = "objectstore
     conn.execute(
         f"""
         CREATE TABLE IF NOT EXISTS {table_name} (
-            object_hash TEXT NOT NULL,
+            canonical_json_sha1 TEXT NOT NULL,
             property_name TEXT NOT NULL,
             property_json TEXT,
-            PRIMARY KEY (object_hash, property_name)
+            PRIMARY KEY (canonical_json_sha1, property_name)
         );
         """
     )
     conn.execute(
-        f"CREATE INDEX IF NOT EXISTS idx_{table_name}_hash ON {table_name}(object_hash);"
+        f"CREATE INDEX IF NOT EXISTS idx_{table_name}_hash ON {table_name}(canonical_json_sha1);"
     )
     conn.commit()
 
 
-def insert_object(conn: sqlite3.Connection, object_hash, obj: dict, table_name: str = "objectstore"):
+def insert_object(conn: sqlite3.Connection, canonical_json_sha1, obj: dict, table_name: str = "objectstore"):
     """Insert a Python dict into the table preserving JSON types."""
     cur = conn.cursor()
     for key, val in obj.items():
         value = 'null' if val is None else json.dumps(val)
         cur.execute(
-            f"INSERT OR REPLACE INTO {table_name} (object_hash, property_name, property_json) VALUES (?, ?, ?)",
-            (object_hash, key, value),
+            f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, property_name, property_json) VALUES (?, ?, ?)",
+            (canonical_json_sha1, key, value),
         )
     conn.commit()
 
 
-def retrieve_object(conn: sqlite3.Connection, object_hash, table_name: str = "objectstore"):
+def retrieve_object(conn: sqlite3.Connection, canonical_json_sha1, table_name: str = "objectstore"):
     """Retrieve a Python dict previously stored with insert_object."""
     cur = conn.cursor()
     cur.execute(
-        f"SELECT property_name, property_json FROM {table_name} WHERE object_hash = ?",
-        (object_hash,),
+        f"SELECT property_name, property_json FROM {table_name} WHERE canonical_json_sha1 = ?",
+        (canonical_json_sha1,),
     )
     rows = cur.fetchall()
     result = {}

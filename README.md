@@ -55,10 +55,10 @@ conn.row_factory = sqlite3.Row
 create_object_table(conn, table_name="my_objects")
 
 my_obj = {"name": "Alice", "age": 30, "flags": [True, False]}
-obj_hash = "my_obj_hash"
-insert_object(conn, obj_hash, my_obj, table_name="my_objects")
+canonical_json_sha1 = "my_obj_hash"
+insert_object(conn, canonical_json_sha1, my_obj, table_name="my_objects")
 
-restored = retrieve_object(conn, obj_hash, table_name="my_objects")
+restored = retrieve_object(conn, canonical_json_sha1, table_name="my_objects")
 print(restored)  # 元の辞書と同じ型・値で復元されます
 
 conn.close()
@@ -78,10 +78,10 @@ conn.close()
 - [`create_object_table(conn, table_name="objectstore")`](objectstore/main.py):
   辞書格納用テーブルを作成します。`table_name` で任意のテーブル名を指定できます。
 
-- [`insert_object(conn, object_hash, obj, table_name="objectstore")`](objectstore/main.py):
+- [`insert_object(conn, canonical_json_sha1, obj, table_name="objectstore")`](objectstore/main.py):
   辞書を指定ハッシュで保存します。`table_name` で保存先テーブルを指定します。
 
-- [`retrieve_object(conn, object_hash, table_name="objectstore")`](objectstore/main.py):
+- [`retrieve_object(conn, canonical_json_sha1, table_name="objectstore")`](objectstore/main.py):
   指定ハッシュの辞書を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
 
 ## テスト
