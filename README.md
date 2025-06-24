@@ -92,37 +92,37 @@ canonical_str = canonical_json({"b": 1, "a": True})
 
 ## API
 
-- [`create_array_table(conn, table_name="arraystore")`](sqlite_store/arraystore/main.py):
+- [`create_array_table(conn, table_name="arraystore")`](sqlite_store/arraystore/table.py):
   配列格納用テーブルを作成します。`table_name` で任意のテーブル名を指定できます。
 
-- [`insert_array(conn, canonical_json_sha1, array, table_name="arraystore")`](sqlite_store/arraystore/main.py):
+- [`insert_array(conn, canonical_json_sha1, array, table_name="arraystore")`](sqlite_store/arraystore/table.py):
   配列を指定ハッシュ（ID）で保存します。`table_name` で保存先テーブルを指定します。
 
-- [`insert_array_auto_hash(conn, array, table_name="arraystore")`](sqlite_store/arraystore/main.py):
+- [`insert_array_auto_hash(conn, array, table_name="arraystore")`](sqlite_store/arraystore/table.py):
   配列を保存する際に、JSONカノニカル形式のSHA1ハッシュを自動計算して利用します。計算したハッシュ値を返します。
-- [`insert_arrays_auto_hash(conn, arrays, table_name="arraystore")`](sqlite_store/arraystore/main.py):
+- [`insert_arrays_auto_hash(conn, arrays, table_name="arraystore")`](sqlite_store/arraystore/table.py):
   複数の配列を一度に保存するための関数です。各配列のハッシュ値のリストを返します。
 
-- [`retrieve_array(conn, canonical_json_sha1, table_name="arraystore")`](sqlite_store/arraystore/main.py):
+- [`retrieve_array(conn, canonical_json_sha1, table_name="arraystore")`](sqlite_store/arraystore/table.py):
   指定ハッシュの配列を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
 
-- [`create_object_table(conn, table_name="objectstore")`](sqlite_store/objectstore/main.py):
+- [`create_object_table(conn, table_name="objectstore")`](sqlite_store/objectstore/table.py):
   辞書格納用テーブルを作成します。`table_name` で任意のテーブル名を指定できます。
 
-- [`insert_object(conn, canonical_json_sha1, obj, table_name="objectstore")`](sqlite_store/objectstore/main.py):
+- [`insert_object(conn, canonical_json_sha1, obj, table_name="objectstore")`](sqlite_store/objectstore/table.py):
   辞書を指定ハッシュで保存します。`table_name` で保存先テーブルを指定します。
 
-- [`insert_object_auto_hash(conn, obj, table_name="objectstore")`](sqlite_store/objectstore/main.py):
+- [`insert_object_auto_hash(conn, obj, table_name="objectstore")`](sqlite_store/objectstore/table.py):
   辞書保存時にSHA1ハッシュを自動計算して利用します。計算したハッシュ値を返します。
-- [`insert_objects_auto_hash(conn, objs, table_name="objectstore")`](sqlite_store/objectstore/main.py):
+- [`insert_objects_auto_hash(conn, objs, table_name="objectstore")`](sqlite_store/objectstore/table.py):
   複数の辞書を同時に保存する際にSHA1を自動計算します。ハッシュ値のリストを返します。
 
-- [`retrieve_object(conn, canonical_json_sha1, table_name="objectstore")`](sqlite_store/objectstore/main.py):
+- [`retrieve_object(conn, canonical_json_sha1, table_name="objectstore")`](sqlite_store/objectstore/table.py):
   指定ハッシュの辞書を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
-- [`create_json_table(conn, table_name="jsonstore")`](sqlite_store/jsonstore/main.py): JSON全体を保存するテーブルを作成します.
-- [`insert_json(conn, canonical_json_sha1, obj, table_name="jsonstore")`](sqlite_store/jsonstore/main.py): JSONを指定ハッシュで保存します.
-- [`insert_json_auto_hash(conn, obj, table_name="jsonstore")`](sqlite_store/jsonstore/main.py): JSON保存時にSHA1を自動計算します.
-- [`retrieve_json(conn, canonical_json_sha1, table_name="jsonstore")`](sqlite_store/jsonstore/main.py): 保存したJSONを復元します.
+- [`create_json_table(conn, table_name="jsonstore")`](sqlite_store/jsonstore/table.py): JSON全体を保存するテーブルを作成します.
+- [`insert_json(conn, canonical_json_sha1, obj, table_name="jsonstore")`](sqlite_store/jsonstore/table.py): JSONを指定ハッシュで保存します.
+- [`insert_json_auto_hash(conn, obj, table_name="jsonstore")`](sqlite_store/jsonstore/table.py): JSON保存時にSHA1を自動計算します.
+- [`retrieve_json(conn, canonical_json_sha1, table_name="jsonstore")`](sqlite_store/jsonstore/table.py): 保存したJSONを復元します.
 
 ## テスト
 

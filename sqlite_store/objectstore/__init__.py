@@ -1,6 +1,6 @@
 """Public API for the :mod:`sqlite_store.objectstore` package."""
 
-from .main import (
+from .table import (
     create_object_table,
     insert_object,
     insert_object_auto_hash,

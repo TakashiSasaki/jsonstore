@@ -1,4 +1,4 @@
-# main.py
+# table.py
 
 import sqlite3
 import json
