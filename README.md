@@ -33,11 +33,11 @@ create_array_table(conn, table_name="my_arrays")
 
 # 配列を保存
 my_array = [42, 3.14, None, True, False, "hello", [1, 2], {"a": 1}]
-array_hash = "my_array_hash"
-insert_array(conn, array_hash, my_array, table_name="my_arrays")
+canonical_json_sha1 = "my_array_hash"
+insert_array(conn, canonical_json_sha1, my_array, table_name="my_arrays")
 
 # 配列を復元
-restored = retrieve_array(conn, array_hash, table_name="my_arrays")
+restored = retrieve_array(conn, canonical_json_sha1, table_name="my_arrays")
 print(restored)  # 元の配列と同じ型・値で復元されます
 
 conn.close()
@@ -48,10 +48,10 @@ conn.close()
 - [`create_array_table(conn, table_name="arraystore")`](arraystore/main.py):
   配列格納用テーブルを作成します。`table_name` で任意のテーブル名を指定できます。
 
-- [`insert_array(conn, array_hash, array, table_name="arraystore")`](arraystore/main.py):
+- [`insert_array(conn, canonical_json_sha1, array, table_name="arraystore")`](arraystore/main.py):
   配列を指定ハッシュ（ID）で保存します。`table_name` で保存先テーブルを指定します。
 
-- [`retrieve_array(conn, array_hash, table_name="arraystore")`](arraystore/main.py):
+- [`retrieve_array(conn, canonical_json_sha1, table_name="arraystore")`](arraystore/main.py):
   指定ハッシュの配列を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
 
 ## テスト

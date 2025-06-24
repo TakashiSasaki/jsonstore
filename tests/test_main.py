@@ -8,13 +8,13 @@ from arraystore.main import create_array_table, insert_array, retrieve_array
 def test_method1_storage():
     """Test storing and retrieving array via Method 1."""
     test_array = [42, 3.14, None, True, False, "hello", "true", "false", "null", "", 0, -0, 1, -1, "0", "1"]
-    array_hash = "testhash"
+    canonical_json_sha1 = "testhash"
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
     create_array_table(conn)
-    insert_array(conn, array_hash, test_array)
-    result = retrieve_array(conn, array_hash)
+    insert_array(conn, canonical_json_sha1, test_array)
+    result = retrieve_array(conn, canonical_json_sha1)
 
     assert result == test_array, (
         f"Restored array does not match original.\n"
@@ -32,13 +32,13 @@ def test_method1_storage():
 def test_method1_nested_array():
     """Test storing and retrieving nested arrays via Method 1."""
     nested_array = [[1, 2], ["a", True], [], [None, [3.14]]]
-    array_hash = "nested_test"
+    canonical_json_sha1 = "nested_test"
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
     create_array_table(conn)
-    insert_array(conn, array_hash, nested_array)
-    result = retrieve_array(conn, array_hash)
+    insert_array(conn, canonical_json_sha1, nested_array)
+    result = retrieve_array(conn, canonical_json_sha1)
 
     assert result == nested_array, (
         f"Restored nested array does not match original.\n"
@@ -59,13 +59,13 @@ def test_method1_object_array():
         {"a": 1, "b": [2, False]},
         {"nested": {"x": True, "y": None}}
     ]
-    array_hash = "object_test"
+    canonical_json_sha1 = "object_test"
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
     create_array_table(conn)
-    insert_array(conn, array_hash, object_array)
-    result = retrieve_array(conn, array_hash)
+    insert_array(conn, canonical_json_sha1, object_array)
+    result = retrieve_array(conn, canonical_json_sha1)
 
     assert result == object_array, (
         f"Restored object array does not match original.\n"
@@ -84,14 +84,14 @@ def test_custom_table_name():
     """Test using a custom table name for storage and retrieval."""
     custom_table = "custom_elements"
     test_array = [1, 2, 3]
-    array_hash = "custom_table_test"
+    canonical_json_sha1 = "custom_table_test"
 
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
     create_array_table(conn, table_name=custom_table)
-    insert_array(conn, array_hash, test_array, table_name=custom_table)
-    result = retrieve_array(conn, array_hash, table_name=custom_table)
+    insert_array(conn, canonical_json_sha1, test_array, table_name=custom_table)
+    result = retrieve_array(conn, canonical_json_sha1, table_name=custom_table)
 
     assert result == test_array
     conn.close()
