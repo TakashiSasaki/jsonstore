@@ -3,7 +3,7 @@
 import sqlite3
 import json
 import hashlib
-from typing import Any, Dict
+from typing import Any, Dict, List
 
 from sqlite_store.canonicaljson import canonical_json
 
@@ -89,6 +89,44 @@ def insert_object_auto_hash(
     canonical_json_sha1 = hashlib.sha1(canonical_json.encode("utf-8")).hexdigest()
     insert_object(conn, canonical_json_sha1, obj, table_name=table_name)
     return canonical_json_sha1
+
+
+def insert_objects_auto_hash(
+    conn: sqlite3.Connection,
+    objs: List[Dict[str, Any]],
+    table_name: str = "objectstore",
+) -> List[str]:
+    """Insert multiple objects computing canonical JSON SHA1 for each.
+
+    Parameters
+    ----------
+    conn : sqlite3.Connection
+        SQLite connection.
+    objs : list of dict
+        Objects to store.
+    table_name : str, optional
+        Name of the table. Defaults to ``"objectstore"``.
+
+    Returns
+    -------
+    list of str
+        SHA1 hashes for the canonical JSON of each object, in input order.
+    """
+
+    hashes: List[str] = []
+    cur = conn.cursor()
+    insert_sql = (
+        f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, property_name, property_json)"
+        f" VALUES (?, ?, ?)"
+    )
+    for obj in objs:
+        canon = _canonical_json(obj)
+        sha1 = hashlib.sha1(canon.encode("utf-8")).hexdigest()
+        for key, val in obj.items():
+            cur.execute(insert_sql, (sha1, key, canonical_json(val)))
+        hashes.append(sha1)
+    conn.commit()
+    return hashes
 
 
 def retrieve_object(
