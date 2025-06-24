@@ -1,8 +1,8 @@
-# test_method1_array_store.py
+# test_main.py
 
 import sqlite3
 import json
-from method1_store_restore_array import create_array_table, insert_array, retrieve_array
+from arraystore.main import create_array_table, insert_array, retrieve_array
 
 
 def test_method1_storage():
