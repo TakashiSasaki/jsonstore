@@ -21,9 +21,9 @@ def test_json_storage():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_json_table(conn)
-    insert_json(conn, cid, data)
-    result = retrieve_json(conn, cid)
+    create_json_table(conn, table_name="jsonstore")
+    insert_json(conn, cid, data, table_name="jsonstore")
+    result = retrieve_json(conn, cid, table_name="jsonstore")
 
     assert result == data
     assert json.dumps(result, sort_keys=True) == json.dumps(data, sort_keys=True)
@@ -35,9 +35,9 @@ def test_insert_json_auto_hash():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_json_table(conn)
-    computed_hash = insert_json_auto_hash(conn, obj)
-    result = retrieve_json(conn, computed_hash)
+    create_json_table(conn, table_name="jsonstore")
+    computed_hash = insert_json_auto_hash(conn, obj, table_name="jsonstore")
+    result = retrieve_json(conn, computed_hash, table_name="jsonstore")
 
     expected_hash = hashlib.sha1(canonical_json(obj).encode("utf-8")).hexdigest()
 
@@ -52,8 +52,8 @@ def test_json_column_canonical():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_json_table(conn)
-    insert_json(conn, cid, obj)
+    create_json_table(conn, table_name="jsonstore")
+    insert_json(conn, cid, obj, table_name="jsonstore")
 
     cur = conn.cursor()
     cur.execute("SELECT canonical_json FROM jsonstore WHERE canonical_json_sha1 = ?", (cid,))
@@ -85,9 +85,9 @@ def test_jsonstore_various_types_and_strings():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_json_table(conn)
-    hash_id = insert_json_auto_hash(conn, complex_obj)
-    result = retrieve_json(conn, hash_id)
+    create_json_table(conn, table_name="jsonstore")
+    hash_id = insert_json_auto_hash(conn, complex_obj, table_name="jsonstore")
+    result = retrieve_json(conn, hash_id, table_name="jsonstore")
 
     assert result == complex_obj
     conn.close()
@@ -113,13 +113,13 @@ def test_large_random_unicode_strings():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_json_table(conn)
+    create_json_table(conn, table_name="jsonstore")
 
     strings = [_random_unicode_string(rng, 102400) for _ in range(100)]
-    hashes = [insert_json_auto_hash(conn, s) for s in strings]
+    hashes = [insert_json_auto_hash(conn, s, table_name="jsonstore") for s in strings]
 
     for cid, original in zip(hashes, strings):
-        restored = retrieve_json(conn, cid)
+        restored = retrieve_json(conn, cid, table_name="jsonstore")
         assert restored == original
 
     conn.close()

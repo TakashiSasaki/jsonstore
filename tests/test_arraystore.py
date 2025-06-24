@@ -24,9 +24,9 @@ def test_method1_storage():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_array_table(conn)
-    insert_array(conn, canonical_json_sha1, test_array)
-    result = retrieve_array(conn, canonical_json_sha1)
+    create_array_table(conn, table_name="arraystore")
+    insert_array(conn, canonical_json_sha1, test_array, table_name="arraystore")
+    result = retrieve_array(conn, canonical_json_sha1, table_name="arraystore")
 
     assert result == test_array, (
         f"Restored array does not match original.\n"
@@ -48,9 +48,9 @@ def test_method1_nested_array():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_array_table(conn)
-    insert_array(conn, canonical_json_sha1, nested_array)
-    result = retrieve_array(conn, canonical_json_sha1)
+    create_array_table(conn, table_name="arraystore")
+    insert_array(conn, canonical_json_sha1, nested_array, table_name="arraystore")
+    result = retrieve_array(conn, canonical_json_sha1, table_name="arraystore")
 
     assert result == nested_array, (
         f"Restored nested array does not match original.\n"
@@ -75,9 +75,9 @@ def test_method1_object_array():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_array_table(conn)
-    insert_array(conn, canonical_json_sha1, object_array)
-    result = retrieve_array(conn, canonical_json_sha1)
+    create_array_table(conn, table_name="arraystore")
+    insert_array(conn, canonical_json_sha1, object_array, table_name="arraystore")
+    result = retrieve_array(conn, canonical_json_sha1, table_name="arraystore")
 
     assert result == object_array, (
         f"Restored object array does not match original.\n"
@@ -115,9 +115,9 @@ def test_insert_array_auto_hash():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_array_table(conn)
-    computed_hash = insert_array_auto_hash(conn, arr)
-    result = retrieve_array(conn, computed_hash)
+    create_array_table(conn, table_name="arraystore")
+    computed_hash = insert_array_auto_hash(conn, arr, table_name="arraystore")
+    result = retrieve_array(conn, computed_hash, table_name="arraystore")
 
     expected_hash = hashlib.sha1(canonical_json(arr).encode("utf-8")).hexdigest()
 
@@ -133,8 +133,8 @@ def test_element_json_canonical():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_array_table(conn)
-    insert_array(conn, cid, data)
+    create_array_table(conn, table_name="arraystore")
+    insert_array(conn, cid, data, table_name="arraystore")
 
     cur = conn.cursor()
     cur.execute(
@@ -157,12 +157,12 @@ def test_insert_arrays_auto_hash():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_array_table(conn)
-    hashes = insert_arrays_auto_hash(conn, arrays)
+    create_array_table(conn, table_name="arraystore")
+    hashes = insert_arrays_auto_hash(conn, arrays, table_name="arraystore")
 
     assert len(hashes) == len(arrays)
     for arr, cid in zip(arrays, hashes):
-        restored = retrieve_array(conn, cid)
+        restored = retrieve_array(conn, cid, table_name="arraystore")
         expected = hashlib.sha1(canonical_json(arr).encode("utf-8")).hexdigest()
         assert cid == expected
         assert restored == arr

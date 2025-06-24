@@ -14,9 +14,13 @@ def test_property_concat_view_default():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_object_table(conn)
-    insert_object(conn, "hash1", {"a": 1, "b": True})
-    create_property_concat_view(conn)
+    create_object_table(conn, table_name="objectstore")
+    insert_object(conn, "hash1", {"a": 1, "b": True}, table_name="objectstore")
+    create_property_concat_view(
+        conn,
+        view_name="objectstore_property_concat",
+        table_name="objectstore",
+    )
 
     cur = conn.cursor()
     cur.execute(

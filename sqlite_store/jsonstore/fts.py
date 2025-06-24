@@ -3,8 +3,8 @@ import sqlite3
 
 def create_json_fts(
     conn: sqlite3.Connection,
-    fts_table_name: str = "jsonstore_fts",
-    table_name: str = "jsonstore",
+    fts_table_name: str,
+    table_name: str,
 ) -> None:
     """Create FTS5 virtual table for the JSON store table.
 

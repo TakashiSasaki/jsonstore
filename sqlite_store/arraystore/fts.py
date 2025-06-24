@@ -3,8 +3,8 @@ import sqlite3
 
 def create_element_concat_fts(
     conn: sqlite3.Connection,
-    fts_table_name: str = "arraystore_element_fts",
-    view_name: str = "arraystore_element_concat",
+    fts_table_name: str,
+    view_name: str,
 ) -> None:
     """Create FTS5 virtual table for the element concat view.
 

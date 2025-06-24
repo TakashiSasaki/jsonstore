@@ -9,15 +9,15 @@ def _canonical_json(obj) -> str:
     return canonical_json(obj)
 
 
-def create_json_table(conn: sqlite3.Connection, table_name: str = "jsonstore"):
+def create_json_table(conn: sqlite3.Connection, table_name: str):
     """Create a table for storing complete JSON structures.
 
     Parameters
     ----------
     conn : sqlite3.Connection
         SQLite connection.
-    table_name : str, optional
-        Name of the table to create. Defaults to ``"jsonstore"``.
+    table_name : str
+        Name of the table to create.
     """
     conn.execute(
         f"""
@@ -34,7 +34,7 @@ def insert_json(
     conn: sqlite3.Connection,
     canonical_json_sha1: str,
     obj,
-    table_name: str = "jsonstore",
+    table_name: str,
 ):
     """Insert JSON structure using the provided SHA1 hash."""
     value = canonical_json(obj)
@@ -45,7 +45,7 @@ def insert_json(
     conn.commit()
 
 
-def insert_json_auto_hash(conn: sqlite3.Connection, obj, table_name: str = "jsonstore") -> str:
+def insert_json_auto_hash(conn: sqlite3.Connection, obj, table_name: str) -> str:
     """Insert JSON structure computing its canonical SHA1 hash.
 
     Returns the computed SHA1 hash string.
@@ -56,7 +56,7 @@ def insert_json_auto_hash(conn: sqlite3.Connection, obj, table_name: str = "json
     return canon_sha1
 
 
-def retrieve_json(conn: sqlite3.Connection, canonical_json_sha1: str, table_name: str = "jsonstore"):
+def retrieve_json(conn: sqlite3.Connection, canonical_json_sha1: str, table_name: str):
     """Retrieve JSON structure previously stored."""
     cur = conn.cursor()
     cur.execute(

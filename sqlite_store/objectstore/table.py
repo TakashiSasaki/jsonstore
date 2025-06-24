@@ -20,15 +20,15 @@ def _canonical_json(obj: Any) -> str:
     return canonical_json(obj)
 
 
-def create_object_table(conn: sqlite3.Connection, table_name: str = "objectstore") -> None:
+def create_object_table(conn: sqlite3.Connection, table_name: str) -> None:
     """Create table and indexes to store object properties.
 
     Parameters
     ----------
     conn : sqlite3.Connection
         SQLite connection.
-    table_name : str, optional
-        Name of the table to create. Defaults to ``"objectstore"``.
+    table_name : str
+        Name of the table to create.
     """
     conn.execute(
         f"""
@@ -51,7 +51,7 @@ def insert_object(
     conn: sqlite3.Connection,
     canonical_json_sha1: str,
     obj: Dict[str, Any],
-    table_name: str = "objectstore",
+    table_name: str,
 ) -> None:
     """Insert a Python dict into the table preserving JSON types."""
     cur = conn.cursor()
@@ -68,7 +68,7 @@ def insert_object(
 def insert_object_auto_hash(
     conn: sqlite3.Connection,
     obj: Dict[str, Any],
-    table_name: str = "objectstore",
+    table_name: str,
 ) -> str:
     """Insert object and compute canonical JSON SHA1 internally.
 
@@ -78,8 +78,8 @@ def insert_object_auto_hash(
         SQLite connection.
     obj : dict
         Object to store.
-    table_name : str, optional
-        Name of the table. Defaults to ``"objectstore"``.
+    table_name : str
+        Name of the table.
 
     Returns
     -------
@@ -96,7 +96,7 @@ def insert_object_auto_hash(
 def insert_objects_auto_hash(
     conn: sqlite3.Connection,
     objs: List[Dict[str, Any]],
-    table_name: str = "objectstore",
+    table_name: str,
 ) -> List[str]:
     """Insert multiple objects computing canonical JSON SHA1 for each.
 
@@ -106,8 +106,8 @@ def insert_objects_auto_hash(
         SQLite connection.
     objs : list of dict
         Objects to store.
-    table_name : str, optional
-        Name of the table. Defaults to ``"objectstore"``.
+    table_name : str
+        Name of the table.
 
     Returns
     -------
@@ -134,7 +134,7 @@ def insert_objects_auto_hash(
 def retrieve_object(
     conn: sqlite3.Connection,
     canonical_json_sha1: str,
-    table_name: str = "objectstore",
+    table_name: str,
 ) -> Dict[str, Any]:
     """Retrieve a Python dict previously stored with insert_object."""
     cur = conn.cursor()
