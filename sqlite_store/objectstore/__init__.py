@@ -7,6 +7,7 @@ from .main import (
     insert_objects_auto_hash,
     retrieve_object,
 )
+from .view import create_property_concat_view
 
 __all__ = [
     "create_object_table",
@@ -14,4 +15,5 @@ __all__ = [
     "insert_object_auto_hash",
     "insert_objects_auto_hash",
     "retrieve_object",
+    "create_property_concat_view",
 ]
