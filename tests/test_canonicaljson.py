@@ -32,3 +32,22 @@ def test_canonical_complex_structure():
     }
     expected = jcs.canonicalize(obj).decode("utf-8")
     assert canonical_json(obj) == expected
+
+
+def test_unicode_in_keys_and_values():
+    obj = {
+        "😀": "🍣 sushi",
+        "text": "こんにちは世界",
+        "emoji_key\U0001F600": "value",
+    }
+    expected = jcs.canonicalize(obj).decode("utf-8")
+    assert canonical_json(obj) == expected
+
+
+def test_control_chars_in_strings():
+    obj = {
+        "line\nbreak": "val\tcontrol",
+        "ctrl\u0001key": "\u0002value",
+    }
+    expected = jcs.canonicalize(obj).decode("utf-8")
+    assert canonical_json(obj) == expected
