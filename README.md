@@ -117,6 +117,25 @@ print(restored)
 conn.close()
 ```
 
+### JsonStore クラス
+
+任意の配列や辞書を丸ごと保存できるラッパークラス `JsonStore` も利用できます。
+
+```python
+import sqlite3
+from sqlite_store.jsonstore.store import JsonStore
+
+conn = sqlite3.connect("example.db")
+conn.row_factory = sqlite3.Row
+
+store = JsonStore(conn)
+jid = store.insert_json_auto_hash({"msg": "hello"})
+restored = store.retrieve_json(jid)
+print(restored)
+
+conn.close()
+```
+
 ### canonical_json 関数
 
 オブジェクトを JSON Canonicalization Scheme (JCS) に従って文字列化する
