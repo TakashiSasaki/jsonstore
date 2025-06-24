@@ -9,6 +9,7 @@ from sqlite_store.objectstore.main import (
     create_object_table,
     insert_object,
     insert_object_auto_hash,
+    insert_objects_auto_hash,
     retrieve_object,
 )
 from sqlite_store import canonical_json
@@ -124,4 +125,26 @@ def test_property_json_is_canonical():
         expected_sha1 = hashlib.sha1(canonical.encode("utf-8")).hexdigest()
         assert stored == canonical
         assert sha1_val == expected_sha1
+    conn.close()
+
+
+def test_insert_objects_auto_hash():
+    objs = [
+        {"a": 1, "b": True},
+        {"x": [1, 2], "y": None},
+    ]
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_object_table(conn)
+    hashes = insert_objects_auto_hash(conn, objs)
+
+    expected = [
+        hashlib.sha1(canonical_json(o).encode("utf-8")).hexdigest() for o in objs
+    ]
+
+    assert hashes == expected
+    for h, original in zip(hashes, objs):
+        restored = retrieve_object(conn, h)
+        assert restored == original
     conn.close()
