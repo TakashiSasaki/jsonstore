@@ -23,7 +23,7 @@ poetry install
 
 ```python
 import sqlite3
-from arraystore.main import create_array_table, insert_array, retrieve_array
+from arraystore.main import create_array_table, insert_array, insert_array_auto_hash, retrieve_array
 
 # SQLite接続
 conn = sqlite3.connect("example.db")
@@ -34,8 +34,7 @@ create_array_table(conn, table_name="my_arrays")
 
 # 配列を保存
 my_array = [42, 3.14, None, True, False, "hello", [1, 2], {"a": 1}]
-canonical_json_sha1 = "my_array_hash"
-insert_array(conn, canonical_json_sha1, my_array, table_name="my_arrays")
+canonical_json_sha1 = insert_array_auto_hash(conn, my_array, table_name="my_arrays")
 
 # 配列を復元
 restored = retrieve_array(conn, canonical_json_sha1, table_name="my_arrays")
@@ -76,6 +75,9 @@ conn.close()
 
 - [`insert_array(conn, canonical_json_sha1, array, table_name="arraystore")`](arraystore/main.py):
   配列を指定ハッシュ（ID）で保存します。`table_name` で保存先テーブルを指定します。
+
+- [`insert_array_auto_hash(conn, array, table_name="arraystore")`](arraystore/main.py):
+  配列を保存する際に、JSONカノニカル形式のSHA1ハッシュを自動計算して利用します。計算したハッシュ値を返します。
 
 - [`retrieve_array(conn, canonical_json_sha1, table_name="arraystore")`](arraystore/main.py):
   指定ハッシュの配列を復元します。`table_name` を揃えることで任意のテーブルから取得できます。

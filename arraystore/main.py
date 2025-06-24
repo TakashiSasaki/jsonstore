@@ -2,6 +2,12 @@
 
 import sqlite3
 import json
+import hashlib
+
+
+def _canonical_json(obj) -> str:
+    """Return JSON canonical form used for hashing."""
+    return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
 
 def create_array_table(conn, table_name: str = "arraystore"):
     """Create table and indexes to store array elements.
@@ -39,6 +45,30 @@ def insert_array(conn, canonical_json_sha1, array, table_name: str = "arraystore
             (canonical_json_sha1, idx, value)
         )
     conn.commit()
+
+
+def insert_array_auto_hash(conn, array, table_name: str = "arraystore"):
+    """Insert array and compute canonical JSON SHA1 internally.
+
+    Parameters
+    ----------
+    conn : sqlite3.Connection
+        SQLite connection.
+    array : list
+        Array to store.
+    table_name : str, optional
+        Name of the table. Defaults to ``"arraystore"``.
+
+    Returns
+    -------
+    str
+        The computed SHA1 hash of the canonical JSON representation.
+    """
+
+    canonical_json = _canonical_json(array)
+    canonical_json_sha1 = hashlib.sha1(canonical_json.encode("utf-8")).hexdigest()
+    insert_array(conn, canonical_json_sha1, array, table_name=table_name)
+    return canonical_json_sha1
 
 def retrieve_array(conn, canonical_json_sha1, table_name: str = "arraystore"):
     """Retrieve array as Python list with preserved types."""

@@ -6,7 +6,13 @@ import sqlite3
 import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from arraystore.main import create_array_table, insert_array, retrieve_array
+from arraystore.main import (
+    create_array_table,
+    insert_array,
+    insert_array_auto_hash,
+    retrieve_array,
+)
+import hashlib
 
 
 def test_method1_storage():
@@ -98,6 +104,25 @@ def test_custom_table_name():
     result = retrieve_array(conn, canonical_json_sha1, table_name=custom_table)
 
     assert result == test_array
+    conn.close()
+
+
+def test_insert_array_auto_hash():
+    """Ensure insert_array_auto_hash computes SHA1 and stores array."""
+    arr = [1, {"b": True}, [2, 3]]
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_array_table(conn)
+    computed_hash = insert_array_auto_hash(conn, arr)
+    result = retrieve_array(conn, computed_hash)
+
+    expected_hash = hashlib.sha1(
+        json.dumps(arr, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+    ).hexdigest()
+
+    assert computed_hash == expected_hash
+    assert result == arr
     conn.close()
 
 
