@@ -4,7 +4,10 @@ version = "0.1.0"
 description = "A library to store and retrieve Python lists/arrays in SQLite using JSON."
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
-packages = [{include = "arraystore"}]
+packages = [
+    {include = "arraystore"},
+    {include = "objectstore"}
+]
 
 [tool.poetry.dependencies]
 python = "^3.8"
