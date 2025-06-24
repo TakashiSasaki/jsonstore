@@ -91,6 +91,8 @@ canonical_str = canonical_json({"b": 1, "a": True})
 
 - [`insert_array_auto_hash(conn, array, table_name="arraystore")`](sqlite_store/arraystore/main.py):
   配列を保存する際に、JSONカノニカル形式のSHA1ハッシュを自動計算して利用します。計算したハッシュ値を返します。
+- [`insert_arrays_auto_hash(conn, arrays, table_name="arraystore")`](sqlite_store/arraystore/main.py):
+  複数の配列を一度に保存するための関数です。各配列のハッシュ値のリストを返します。
 
 - [`retrieve_array(conn, canonical_json_sha1, table_name="arraystore")`](sqlite_store/arraystore/main.py):
   指定ハッシュの配列を復元します。`table_name` を揃えることで任意のテーブルから取得できます。

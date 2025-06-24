@@ -90,6 +90,46 @@ def insert_array_auto_hash(
     insert_array(conn, canonical_json_sha1, array, table_name=table_name)
     return canonical_json_sha1
 
+
+def insert_arrays_auto_hash(
+    conn: sqlite3.Connection, arrays: List[List[Any]], table_name: str = "arraystore"
+) -> List[str]:
+    """Insert multiple arrays at once computing SHA1 for each.
+
+    Parameters
+    ----------
+    conn : sqlite3.Connection
+        SQLite connection.
+    arrays : list[list]
+        List of arrays to store.
+    table_name : str, optional
+        Name of the table. Defaults to ``"arraystore"``.
+
+    Returns
+    -------
+    list[str]
+        SHA1 hashes for each array in the same order as ``arrays``.
+    """
+
+    hashes: List[str] = []
+    rows = []
+    for array in arrays:
+        canonical = _canonical_json(array)
+        sha1 = hashlib.sha1(canonical.encode("utf-8")).hexdigest()
+        hashes.append(sha1)
+        for idx, val in enumerate(array):
+            rows.append((sha1, idx, canonical_json(val)))
+
+    if rows:
+        cur = conn.cursor()
+        cur.executemany(
+            f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, element_index, element_json) VALUES (?, ?, ?)",
+            rows,
+        )
+        conn.commit()
+
+    return hashes
+
 def retrieve_array(
     conn: sqlite3.Connection, canonical_json_sha1: str, table_name: str = "arraystore"
 ) -> List[Any]:
