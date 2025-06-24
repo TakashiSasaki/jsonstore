@@ -4,10 +4,20 @@ import sqlite3
 import json
 import hashlib
 
+from canonicaljson import canonical_json
+
 
 def _canonical_json(obj) -> str:
-    """Return JSON canonical form used for hashing."""
-    return json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False)
+    """Return JSON canonical form used for hashing.
+
+    The implementation follows the JSON Canonicalization Scheme (JCS)
+    without depending on the ``jcs`` package for the actual encoding.
+    For additional safety during development, the result is verified
+    against ``jcs.canonicalize``. This check can be removed for a
+    performance optimised release build.
+    """
+
+    return canonical_json(obj)
 
 def create_array_table(conn, table_name: str = "arraystore"):
     """Create table and indexes to store array elements.

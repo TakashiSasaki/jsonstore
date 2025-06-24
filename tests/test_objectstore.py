@@ -87,9 +87,9 @@ def test_insert_object_auto_hash():
     computed_hash = insert_object_auto_hash(conn, obj)
     result = retrieve_object(conn, computed_hash)
 
-    expected_hash = hashlib.sha1(
-        json.dumps(obj, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
-    ).hexdigest()
+    from canonicaljson import canonical_json
+
+    expected_hash = hashlib.sha1(canonical_json(obj).encode("utf-8")).hexdigest()
 
     assert computed_hash == expected_hash
     assert result == obj
