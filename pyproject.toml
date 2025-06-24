@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "arraystore"
+version = "0.1.0"
+description = "A library to store and retrieve Python lists/arrays in SQLite using JSON."
+authors = ["Your Name <you@example.com>"]
+readme = "README.md"
+packages = [{include = "arraystore"}]
+
+[tool.poetry.dependencies]
+python = "^3.8"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^7.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
