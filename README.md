@@ -45,13 +45,13 @@ conn.close()
 
 ## API
 
-- [`create_array_table(conn, table_name="array_elements")`](arraystore/main.py):
+- [`create_array_table(conn, table_name="arraystore")`](arraystore/main.py):
   配列格納用テーブルを作成します。`table_name` で任意のテーブル名を指定できます。
 
-- [`insert_array(conn, array_hash, array, table_name="array_elements")`](arraystore/main.py):
+- [`insert_array(conn, array_hash, array, table_name="arraystore")`](arraystore/main.py):
   配列を指定ハッシュ（ID）で保存します。`table_name` で保存先テーブルを指定します。
 
-- [`retrieve_array(conn, array_hash, table_name="array_elements")`](arraystore/main.py):
+- [`retrieve_array(conn, array_hash, table_name="arraystore")`](arraystore/main.py):
   指定ハッシュの配列を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
 
 ## テスト

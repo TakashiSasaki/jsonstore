@@ -3,7 +3,7 @@
 import sqlite3
 import json
 
-def create_array_table(conn, table_name: str = "array_elements"):
+def create_array_table(conn, table_name: str = "arraystore"):
     """Create table and indexes to store array elements.
 
     Parameters
@@ -11,7 +11,7 @@ def create_array_table(conn, table_name: str = "array_elements"):
     conn : sqlite3.Connection
         SQLite connection.
     table_name : str, optional
-        Name of the table to create. Defaults to ``"array_elements"``.
+        Name of the table to create. Defaults to ``"arraystore"``.
     """
 
     conn.execute(f"""
@@ -28,7 +28,7 @@ def create_array_table(conn, table_name: str = "array_elements"):
     )
     conn.commit()
 
-def insert_array(conn, array_hash, array, table_name: str = "array_elements"):
+def insert_array(conn, array_hash, array, table_name: str = "arraystore"):
     """Insert array into table using json.dumps to preserve types."""
     cur = conn.cursor()
     for idx, val in enumerate(array):
@@ -40,7 +40,7 @@ def insert_array(conn, array_hash, array, table_name: str = "array_elements"):
         )
     conn.commit()
 
-def retrieve_array(conn, array_hash, table_name: str = "array_elements"):
+def retrieve_array(conn, array_hash, table_name: str = "arraystore"):
     """Retrieve array as Python list with preserved types."""
     cur = conn.cursor()
     cur.execute(
