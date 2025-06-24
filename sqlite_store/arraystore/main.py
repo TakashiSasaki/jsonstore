@@ -36,6 +36,7 @@ def create_array_table(conn: sqlite3.Connection, table_name: str = "arraystore")
             canonical_json_sha1 TEXT NOT NULL,
             element_index INTEGER NOT NULL,
             element_json TEXT,
+            element_json_sha1 TEXT,
             PRIMARY KEY (canonical_json_sha1, element_index)
         );
     """)
@@ -56,9 +57,10 @@ def insert_array(
     for idx, val in enumerate(array):
         # Store canonical JSON literal representation of each element
         value = canonical_json(val)
+        value_sha1 = hashlib.sha1(value.encode("utf-8")).hexdigest()
         cur.execute(
-            f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, element_index, element_json) VALUES (?, ?, ?)",
-            (canonical_json_sha1, idx, value)
+            f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, element_index, element_json, element_json_sha1) VALUES (?, ?, ?, ?)",
+            (canonical_json_sha1, idx, value, value_sha1)
         )
     conn.commit()
 
