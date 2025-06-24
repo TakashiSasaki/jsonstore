@@ -20,15 +20,15 @@ def _canonical_json(obj: Any) -> str:
 
     return canonical_json(obj)
 
-def create_array_table(conn: sqlite3.Connection, table_name: str = "arraystore") -> None:
+def create_array_table(conn: sqlite3.Connection, table_name: str) -> None:
     """Create table and indexes to store array elements.
 
     Parameters
     ----------
     conn : sqlite3.Connection
         SQLite connection.
-    table_name : str, optional
-        Name of the table to create. Defaults to ``"arraystore"``.
+    table_name : str
+        Name of the table to create.
     """
 
     conn.execute(f"""
@@ -50,7 +50,7 @@ def insert_array(
     conn: sqlite3.Connection,
     canonical_json_sha1: str,
     array: List[Any],
-    table_name: str = "arraystore",
+    table_name: str,
 ) -> None:
     """Insert array into table using canonical JSON for each element."""
     cur = conn.cursor()
@@ -66,7 +66,7 @@ def insert_array(
 
 
 def insert_array_auto_hash(
-    conn: sqlite3.Connection, array: List[Any], table_name: str = "arraystore"
+    conn: sqlite3.Connection, array: List[Any], table_name: str
 ) -> str:
     """Insert array and compute canonical JSON SHA1 internally.
 
@@ -76,8 +76,8 @@ def insert_array_auto_hash(
         SQLite connection.
     array : list
         Array to store.
-    table_name : str, optional
-        Name of the table. Defaults to ``"arraystore"``.
+    table_name : str
+        Name of the table.
 
     Returns
     -------
@@ -92,7 +92,7 @@ def insert_array_auto_hash(
 
 
 def insert_arrays_auto_hash(
-    conn: sqlite3.Connection, arrays: List[List[Any]], table_name: str = "arraystore"
+    conn: sqlite3.Connection, arrays: List[List[Any]], table_name: str
 ) -> List[str]:
     """Insert multiple arrays at once computing SHA1 for each.
 
@@ -102,8 +102,8 @@ def insert_arrays_auto_hash(
         SQLite connection.
     arrays : list[list]
         List of arrays to store.
-    table_name : str, optional
-        Name of the table. Defaults to ``"arraystore"``.
+    table_name : str
+        Name of the table.
 
     Returns
     -------
@@ -131,7 +131,7 @@ def insert_arrays_auto_hash(
     return hashes
 
 def retrieve_array(
-    conn: sqlite3.Connection, canonical_json_sha1: str, table_name: str = "arraystore"
+    conn: sqlite3.Connection, canonical_json_sha1: str, table_name: str
 ) -> List[Any]:
     """Retrieve array as Python list with preserved types."""
     cur = conn.cursor()

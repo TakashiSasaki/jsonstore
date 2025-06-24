@@ -3,8 +3,8 @@ import sqlite3
 
 def create_element_concat_view(
     conn: sqlite3.Connection,
-    view_name: str = "arraystore_element_concat",
-    table_name: str = "arraystore",
+    view_name: str,
+    table_name: str,
 ) -> None:
     """Create a view that concatenates element_json values by array hash.
 

@@ -11,10 +11,14 @@ def test_json_fts_search():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_json_table(conn)
-    insert_json(conn, "j1", {"text": "hello"})
-    insert_json(conn, "j2", {"text": "world"})
-    create_json_fts(conn)
+    create_json_table(conn, table_name="jsonstore")
+    insert_json(conn, "j1", {"text": "hello"}, table_name="jsonstore")
+    insert_json(conn, "j2", {"text": "world"}, table_name="jsonstore")
+    create_json_fts(
+        conn,
+        fts_table_name="jsonstore_fts",
+        table_name="jsonstore",
+    )
 
     cur = conn.cursor()
     cur.execute(

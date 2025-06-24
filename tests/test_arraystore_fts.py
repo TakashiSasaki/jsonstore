@@ -12,11 +12,19 @@ def test_element_concat_fts_search():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_array_table(conn)
-    insert_array(conn, "h1", ["hello", "world"])
-    insert_array(conn, "h2", ["another", "test"])
-    create_element_concat_view(conn)
-    create_element_concat_fts(conn)
+    create_array_table(conn, table_name="arraystore")
+    insert_array(conn, "h1", ["hello", "world"], table_name="arraystore")
+    insert_array(conn, "h2", ["another", "test"], table_name="arraystore")
+    create_element_concat_view(
+        conn,
+        view_name="arraystore_element_concat",
+        table_name="arraystore",
+    )
+    create_element_concat_fts(
+        conn,
+        fts_table_name="arraystore_element_fts",
+        view_name="arraystore_element_concat",
+    )
 
     cur = conn.cursor()
     cur.execute(

@@ -11,9 +11,13 @@ def test_element_concat_view_default():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_array_table(conn)
-    insert_array(conn, "hash1", [1, True])
-    create_element_concat_view(conn)
+    create_array_table(conn, table_name="arraystore")
+    insert_array(conn, "hash1", [1, True], table_name="arraystore")
+    create_element_concat_view(
+        conn,
+        view_name="arraystore_element_concat",
+        table_name="arraystore",
+    )
 
     cur = conn.cursor()
     cur.execute(

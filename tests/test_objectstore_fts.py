@@ -12,11 +12,19 @@ def test_property_concat_fts_search():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_object_table(conn)
-    insert_object(conn, "obj1", {"a": 1, "b": "text"})
-    insert_object(conn, "obj2", {"c": True})
-    create_property_concat_view(conn)
-    create_property_concat_fts(conn)
+    create_object_table(conn, table_name="objectstore")
+    insert_object(conn, "obj1", {"a": 1, "b": "text"}, table_name="objectstore")
+    insert_object(conn, "obj2", {"c": True}, table_name="objectstore")
+    create_property_concat_view(
+        conn,
+        view_name="objectstore_property_concat",
+        table_name="objectstore",
+    )
+    create_property_concat_fts(
+        conn,
+        fts_table_name="objectstore_property_fts",
+        view_name="objectstore_property_concat",
+    )
 
     cur = conn.cursor()
     cur.execute(

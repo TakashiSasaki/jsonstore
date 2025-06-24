@@ -3,8 +3,8 @@ import sqlite3
 
 def create_property_concat_view(
     conn: sqlite3.Connection,
-    view_name: str = "objectstore_property_concat",
-    table_name: str = "objectstore",
+    view_name: str,
+    table_name: str,
 ) -> None:
     """Create a view that concatenates property_json values by object hash.
 

@@ -21,9 +21,9 @@ def test_object_storage():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_object_table(conn)
-    insert_object(conn, canonical_json_sha1, data)
-    result = retrieve_object(conn, canonical_json_sha1)
+    create_object_table(conn, table_name="objectstore")
+    insert_object(conn, canonical_json_sha1, data, table_name="objectstore")
+    result = retrieve_object(conn, canonical_json_sha1, table_name="objectstore")
 
     assert result == data
     assert json.dumps(result, sort_keys=True) == json.dumps(data, sort_keys=True)
@@ -69,9 +69,9 @@ def test_object_storage_various_types():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_object_table(conn)
-    insert_object(conn, obj_hash, data)
-    result = retrieve_object(conn, obj_hash)
+    create_object_table(conn, table_name="objectstore")
+    insert_object(conn, obj_hash, data, table_name="objectstore")
+    result = retrieve_object(conn, obj_hash, table_name="objectstore")
 
     assert result == data
     for key, val in data.items():
@@ -85,9 +85,9 @@ def test_insert_object_auto_hash():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_object_table(conn)
-    computed_hash = insert_object_auto_hash(conn, obj)
-    result = retrieve_object(conn, computed_hash)
+    create_object_table(conn, table_name="objectstore")
+    computed_hash = insert_object_auto_hash(conn, obj, table_name="objectstore")
+    result = retrieve_object(conn, computed_hash, table_name="objectstore")
 
     expected_hash = hashlib.sha1(canonical_json(obj).encode("utf-8")).hexdigest()
 
@@ -107,8 +107,8 @@ def test_property_json_is_canonical():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_object_table(conn)
-    insert_object(conn, hash_id, obj)
+    create_object_table(conn, table_name="objectstore")
+    insert_object(conn, hash_id, obj, table_name="objectstore")
 
     cur = conn.cursor()
     cur.execute(
@@ -136,8 +136,8 @@ def test_insert_objects_auto_hash():
     conn = sqlite3.connect(":memory:")
     conn.row_factory = sqlite3.Row
 
-    create_object_table(conn)
-    hashes = insert_objects_auto_hash(conn, objs)
+    create_object_table(conn, table_name="objectstore")
+    hashes = insert_objects_auto_hash(conn, objs, table_name="objectstore")
 
     expected = [
         hashlib.sha1(canonical_json(o).encode("utf-8")).hexdigest() for o in objs
@@ -145,6 +145,6 @@ def test_insert_objects_auto_hash():
 
     assert hashes == expected
     for h, original in zip(hashes, objs):
-        restored = retrieve_object(conn, h)
+        restored = retrieve_object(conn, h, table_name="objectstore")
         assert restored == original
     conn.close()
