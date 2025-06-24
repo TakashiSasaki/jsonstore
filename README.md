@@ -49,6 +49,26 @@ print(restored)  # 元の配列と同じ型・値で復元されます
 conn.close()
 ```
 
+### ArrayStore クラス
+
+関数群の代わりに、テーブルやビューの作成を含めた便利なラッパークラス
+`ArrayStore` も利用できます。
+
+```python
+import sqlite3
+from sqlite_store.arraystore.store import ArrayStore
+
+conn = sqlite3.connect("example.db")
+conn.row_factory = sqlite3.Row
+
+store = ArrayStore(conn)
+cid = store.insert_array_auto_hash([1, 2, 3])
+restored = store.retrieve_array(cid)
+print(restored)
+
+conn.close()
+```
+
 ### objectstore モジュールによる辞書の保存
 
 `objectstore` は、辞書の各プロパティを JSON リテラルとして保存することで、
