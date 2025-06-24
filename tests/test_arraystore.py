@@ -137,13 +137,16 @@ def test_element_json_canonical():
 
     cur = conn.cursor()
     cur.execute(
-        "SELECT element_index, element_json FROM arraystore WHERE canonical_json_sha1 = ? ORDER BY element_index",
+        "SELECT element_index, element_json, element_json_sha1 FROM arraystore WHERE canonical_json_sha1 = ? ORDER BY element_index",
         (cid,),
     )
     rows = cur.fetchall()
 
-    for idx, json_val in rows:
-        assert json_val == canonical_json(data[idx])
+    for idx, json_val, sha1_val in rows:
+        canon = canonical_json(data[idx])
+        expected_sha1 = hashlib.sha1(canon.encode("utf-8")).hexdigest()
+        assert json_val == canon
+        assert sha1_val == expected_sha1
     conn.close()
 
 

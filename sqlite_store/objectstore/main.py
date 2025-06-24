@@ -36,6 +36,7 @@ def create_object_table(conn: sqlite3.Connection, table_name: str = "objectstore
             canonical_json_sha1 TEXT NOT NULL,
             property_name TEXT NOT NULL,
             property_json TEXT,
+            property_json_sha1 TEXT,
             PRIMARY KEY (canonical_json_sha1, property_name)
         );
         """
@@ -56,9 +57,10 @@ def insert_object(
     cur = conn.cursor()
     for key, val in obj.items():
         value = canonical_json(val)
+        value_sha1 = hashlib.sha1(value.encode("utf-8")).hexdigest()
         cur.execute(
-            f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, property_name, property_json) VALUES (?, ?, ?)",
-            (canonical_json_sha1, key, value),
+            f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, property_name, property_json, property_json_sha1) VALUES (?, ?, ?, ?)",
+            (canonical_json_sha1, key, value, value_sha1),
         )
     conn.commit()
 

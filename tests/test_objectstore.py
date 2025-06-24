@@ -111,7 +111,7 @@ def test_property_json_is_canonical():
 
     cur = conn.cursor()
     cur.execute(
-        "SELECT property_name, property_json FROM objectstore WHERE canonical_json_sha1 = ?",
+        "SELECT property_name, property_json, property_json_sha1 FROM objectstore WHERE canonical_json_sha1 = ?",
         (hash_id,),
     )
     rows = cur.fetchall()
@@ -119,5 +119,9 @@ def test_property_json_is_canonical():
     for row in rows:
         name = row[0]
         stored = row[1]
-        assert stored == canonical_json(obj[name])
+        sha1_val = row[2]
+        canonical = canonical_json(obj[name])
+        expected_sha1 = hashlib.sha1(canonical.encode("utf-8")).hexdigest()
+        assert stored == canonical
+        assert sha1_val == expected_sha1
     conn.close()
