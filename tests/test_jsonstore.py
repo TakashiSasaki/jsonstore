@@ -3,6 +3,7 @@ import sys
 import sqlite3
 import json
 import hashlib
+import random
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from jsonstore.main import (
@@ -89,4 +90,36 @@ def test_jsonstore_various_types_and_strings():
     result = retrieve_json(conn, hash_id)
 
     assert result == complex_obj
+    conn.close()
+
+
+def _random_unicode_string(rng: random.Random, min_bytes: int) -> str:
+    """Return a random Unicode string of at least ``min_bytes`` UTF-8 bytes."""
+    parts = []
+    size = 0
+    while size < min_bytes:
+        cp = rng.randint(0, 0x10FFFF)
+        if 0xD800 <= cp <= 0xDFFF:
+            continue
+        ch = chr(cp)
+        parts.append(ch)
+        size += len(ch.encode("utf-8"))
+    return "".join(parts)
+
+
+def test_large_random_unicode_strings():
+    """Store and retrieve many large random Unicode strings."""
+    rng = random.Random(0)
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_json_table(conn)
+
+    strings = [_random_unicode_string(rng, 102400) for _ in range(100)]
+    hashes = [insert_json_auto_hash(conn, s) for s in strings]
+
+    for cid, original in zip(hashes, strings):
+        restored = retrieve_json(conn, cid)
+        assert restored == original
+
     conn.close()
