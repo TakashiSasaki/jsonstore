@@ -2,7 +2,7 @@
 name = "arraystore"
 version = "0.1.0"
 description = "A library to store and retrieve Python lists/arrays in SQLite using JSON."
-authors = ["Your Name <you@example.com>"]
+authors = ["Takashi Sasaki <takashi316@gmail.com>"]
 readme = "README.md"
 packages = [
     {include = "arraystore"},
