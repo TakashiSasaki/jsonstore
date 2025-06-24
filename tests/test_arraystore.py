@@ -6,12 +6,13 @@ import sqlite3
 import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from arraystore.main import (
+from sqlite_store.arraystore.main import (
     create_array_table,
     insert_array,
     insert_array_auto_hash,
     retrieve_array,
 )
+from sqlite_store import canonical_json
 import hashlib
 
 
@@ -117,8 +118,6 @@ def test_insert_array_auto_hash():
     computed_hash = insert_array_auto_hash(conn, arr)
     result = retrieve_array(conn, computed_hash)
 
-    from canonicaljson import canonical_json
-
     expected_hash = hashlib.sha1(canonical_json(arr).encode("utf-8")).hexdigest()
 
     assert computed_hash == expected_hash
@@ -142,8 +141,6 @@ def test_element_json_canonical():
         (cid,),
     )
     rows = cur.fetchall()
-
-    from canonicaljson import canonical_json
 
     for idx, json_val in rows:
         assert json_val == canonical_json(data[idx])

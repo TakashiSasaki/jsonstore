@@ -4,7 +4,7 @@ import jcs
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
-from canonicaljson import canonical_json
+from sqlite_store import canonical_json
 
 
 def test_canonical_numbers():

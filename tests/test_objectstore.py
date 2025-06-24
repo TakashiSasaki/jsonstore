@@ -5,13 +5,13 @@ import json
 import hashlib
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from objectstore.main import (
+from sqlite_store.objectstore.main import (
     create_object_table,
     insert_object,
     insert_object_auto_hash,
     retrieve_object,
 )
-from canonicaljson import canonical_json
+from sqlite_store import canonical_json
 
 
 def test_object_storage():
@@ -87,8 +87,6 @@ def test_insert_object_auto_hash():
     create_object_table(conn)
     computed_hash = insert_object_auto_hash(conn, obj)
     result = retrieve_object(conn, computed_hash)
-
-    from canonicaljson import canonical_json
 
     expected_hash = hashlib.sha1(canonical_json(obj).encode("utf-8")).hexdigest()
 
