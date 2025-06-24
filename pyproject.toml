@@ -6,7 +6,8 @@ authors = ["Your Name <you@example.com>"]
 readme = "README.md"
 packages = [
     {include = "arraystore"},
-    {include = "objectstore"}
+    {include = "objectstore"},
+    {include = "jsonstore"}
 ]
 
 [tool.poetry.dependencies]
