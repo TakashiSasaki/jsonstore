@@ -1,6 +1,6 @@
 # arraystore
 
-Pythonリスト（配列）を**型を保ったままSQLiteデータベースに保存・復元**するためのシンプルなライブラリです。また、同じ仕組みでPython辞書を扱う``objectstore``モジュールも提供します。
+Pythonリスト（配列）を**型を保ったままSQLiteデータベースに保存・復元**するためのシンプルなライブラリです。また、同じ仕組みでPython辞書を扱う``objectstore``モジュールと、配列や辞書を丸ごと保存する`jsonstore`モジュールも提供します。
 各要素をJSONリテラルとして保存することで、数値・真偽値・null・文字列・ネスト配列・辞書など、Pythonの型を損なわずに格納できます。
 
 ## 特徴
@@ -10,6 +10,7 @@ Pythonリスト（配列）を**型を保ったままSQLiteデータベースに
 - SQLiteの標準機能のみで動作
 - シンプルなAPI
 - Python辞書を保存・復元できる `objectstore` モジュールを同梱
+- 任意の配列・辞書を丸ごと保存する `jsonstore` モジュールを同梱
 
 ## インストール
 
@@ -90,14 +91,12 @@ conn.close()
 
 - [`retrieve_object(conn, canonical_json_sha1, table_name="objectstore")`](objectstore/main.py):
   指定ハッシュの辞書を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
+- [`create_json_table(conn, table_name="jsonstore")`](jsonstore/main.py): JSON全体を保存するテーブルを作成します.
+- [`insert_json(conn, canonical_json_sha1, obj, table_name="jsonstore")`](jsonstore/main.py): JSONを指定ハッシュで保存します.
+- [`insert_json_auto_hash(conn, obj, table_name="jsonstore")`](jsonstore/main.py): JSON保存時にSHA1を自動計算します.
+- [`retrieve_json(conn, canonical_json_sha1, table_name="jsonstore")`](jsonstore/main.py): 保存したJSONを復元します.
 
 ## テスト
-
-```sh
-pytest tests/
-```
-
-## 注意
 
 - 配列要素の順序・型・値が完全に保持されます。
 - SQLiteのTEXT型カラムに**JSONリテラル**として保存するため、型の混同や変換ロスがありません。
