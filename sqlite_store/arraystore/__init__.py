@@ -9,6 +9,7 @@ from .table import (
 )
 from .view import create_element_concat_view
 from .fts import create_element_concat_fts
+from .store import ArrayStore
 
 __all__ = [
     "create_array_table",
@@ -18,4 +19,5 @@ __all__ = [
     "retrieve_array",
     "create_element_concat_view",
     "create_element_concat_fts",
+    "ArrayStore",
 ]
