@@ -3,11 +3,12 @@
 import sqlite3
 import json
 import hashlib
+from typing import Any, Dict
 
 from canonicaljson import canonical_json
 
 
-def _canonical_json(obj) -> str:
+def _canonical_json(obj: Any) -> str:
     """Return canonical JSON string for hashing.
 
     The function encodes according to the JSON Canonicalization Scheme
@@ -19,7 +20,7 @@ def _canonical_json(obj) -> str:
     return canonical_json(obj)
 
 
-def create_object_table(conn: sqlite3.Connection, table_name: str = "objectstore"):
+def create_object_table(conn: sqlite3.Connection, table_name: str = "objectstore") -> None:
     """Create table and indexes to store object properties.
 
     Parameters
@@ -45,7 +46,12 @@ def create_object_table(conn: sqlite3.Connection, table_name: str = "objectstore
     conn.commit()
 
 
-def insert_object(conn: sqlite3.Connection, canonical_json_sha1, obj: dict, table_name: str = "objectstore"):
+def insert_object(
+    conn: sqlite3.Connection,
+    canonical_json_sha1: str,
+    obj: Dict[str, Any],
+    table_name: str = "objectstore",
+) -> None:
     """Insert a Python dict into the table preserving JSON types."""
     cur = conn.cursor()
     for key, val in obj.items():
@@ -57,7 +63,11 @@ def insert_object(conn: sqlite3.Connection, canonical_json_sha1, obj: dict, tabl
     conn.commit()
 
 
-def insert_object_auto_hash(conn: sqlite3.Connection, obj: dict, table_name: str = "objectstore"):
+def insert_object_auto_hash(
+    conn: sqlite3.Connection,
+    obj: Dict[str, Any],
+    table_name: str = "objectstore",
+) -> str:
     """Insert object and compute canonical JSON SHA1 internally.
 
     Parameters
@@ -81,7 +91,11 @@ def insert_object_auto_hash(conn: sqlite3.Connection, obj: dict, table_name: str
     return canonical_json_sha1
 
 
-def retrieve_object(conn: sqlite3.Connection, canonical_json_sha1, table_name: str = "objectstore"):
+def retrieve_object(
+    conn: sqlite3.Connection,
+    canonical_json_sha1: str,
+    table_name: str = "objectstore",
+) -> Dict[str, Any]:
     """Retrieve a Python dict previously stored with insert_object."""
     cur = conn.cursor()
     cur.execute(
