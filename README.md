@@ -64,7 +64,7 @@ pytest tests/
 
 - 配列要素の順序・型・値が完全に保持されます。
 - SQLiteのTEXT型カラムに**JSONリテラル**として保存するため、型の混同や変換ロスがありません。
-- 詳細な技術的背景や他方式との比較は [method2_type_loss_in_sqlite.md](method2_type_loss_in_sqlite.md) を参照してください。
+- 詳細な技術的背景や他方式との比較は [case_json_quote_type_loss.md](docs/case_json_quote_type_loss.md) を参照してください。
 
 ## ライセンス
 
