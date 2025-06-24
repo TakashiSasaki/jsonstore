@@ -5,7 +5,7 @@ import json
 import hashlib
 from typing import Any, List
 
-from canonicaljson import canonical_json
+from sqlite_store.canonicaljson import canonical_json
 
 
 def _canonical_json(obj: Any) -> str:
