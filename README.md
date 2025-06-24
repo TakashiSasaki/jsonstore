@@ -1,6 +1,6 @@
 # arraystore
 
-Pythonリスト（配列）を**型を保ったままSQLiteデータベースに保存・復元**するためのシンプルなライブラリです。  
+Pythonリスト（配列）を**型を保ったままSQLiteデータベースに保存・復元**するためのシンプルなライブラリです。また、同じ仕組みでPython辞書を扱う``objectstore``モジュールも提供します。
 各要素をJSONリテラルとして保存することで、数値・真偽値・null・文字列・ネスト配列・辞書など、Pythonの型を損なわずに格納できます。
 
 ## 特徴
@@ -43,6 +43,27 @@ print(restored)  # 元の配列と同じ型・値で復元されます
 conn.close()
 ```
 
+### オブジェクトの保存
+
+```python
+import sqlite3
+from objectstore.main import create_object_table, insert_object, retrieve_object
+
+conn = sqlite3.connect("example.db")
+conn.row_factory = sqlite3.Row
+
+create_object_table(conn, table_name="my_objects")
+
+my_obj = {"name": "Alice", "age": 30, "flags": [True, False]}
+obj_hash = "my_obj_hash"
+insert_object(conn, obj_hash, my_obj, table_name="my_objects")
+
+restored = retrieve_object(conn, obj_hash, table_name="my_objects")
+print(restored)  # 元の辞書と同じ型・値で復元されます
+
+conn.close()
+```
+
 ## API
 
 - [`create_array_table(conn, table_name="arraystore")`](arraystore/main.py):
@@ -53,6 +74,15 @@ conn.close()
 
 - [`retrieve_array(conn, array_hash, table_name="arraystore")`](arraystore/main.py):
   指定ハッシュの配列を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
+
+- [`create_object_table(conn, table_name="objectstore")`](objectstore/main.py):
+  辞書格納用テーブルを作成します。`table_name` で任意のテーブル名を指定できます。
+
+- [`insert_object(conn, object_hash, obj, table_name="objectstore")`](objectstore/main.py):
+  辞書を指定ハッシュで保存します。`table_name` で保存先テーブルを指定します。
+
+- [`retrieve_object(conn, object_hash, table_name="objectstore")`](objectstore/main.py):
+  指定ハッシュの辞書を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
 
 ## テスト
 
