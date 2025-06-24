@@ -18,7 +18,7 @@ def create_array_table(conn, table_name: str = "array_elements"):
         CREATE TABLE IF NOT EXISTS {table_name} (
             array_hash TEXT NOT NULL,
             element_index INTEGER NOT NULL,
-            element_value TEXT,
+            element_json TEXT,
             PRIMARY KEY (array_hash, element_index)
         );
     """)
@@ -35,7 +35,7 @@ def insert_array(conn, array_hash, array, table_name: str = "array_elements"):
         # Store JSON literal representation
         value = 'null' if val is None else json.dumps(val)
         cur.execute(
-            f"INSERT OR REPLACE INTO {table_name} (array_hash, element_index, element_value) VALUES (?, ?, ?)",
+            f"INSERT OR REPLACE INTO {table_name} (array_hash, element_index, element_json) VALUES (?, ?, ?)",
             (array_hash, idx, value)
         )
     conn.commit()
@@ -45,7 +45,7 @@ def retrieve_array(conn, array_hash, table_name: str = "array_elements"):
     cur = conn.cursor()
     cur.execute(
         f"""
-        SELECT '[' || GROUP_CONCAT(element_value, ',') || ']' AS json_array
+        SELECT '[' || GROUP_CONCAT(element_json, ',') || ']' AS json_array
         FROM {table_name}
         WHERE array_hash = ?
         GROUP BY array_hash;
