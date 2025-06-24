@@ -126,6 +126,30 @@ def test_insert_array_auto_hash():
     conn.close()
 
 
+def test_element_json_canonical():
+    """Ensure each element is stored using canonical JSON."""
+    data = [0, 1.0, -0.0, {"b": [2, False]}, [1, 2], None]
+    cid = "canon_test"
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_array_table(conn)
+    insert_array(conn, cid, data)
+
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT element_index, element_json FROM arraystore WHERE canonical_json_sha1 = ? ORDER BY element_index",
+        (cid,),
+    )
+    rows = cur.fetchall()
+
+    from canonicaljson import canonical_json
+
+    for idx, json_val in rows:
+        assert json_val == canonical_json(data[idx])
+    conn.close()
+
+
 if __name__ == "__main__":
     test_method1_storage()
     test_method1_nested_array()
