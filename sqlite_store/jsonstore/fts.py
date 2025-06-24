@@ -10,7 +10,7 @@ def create_json_fts(
 
     This function creates an FTS5 table that indexes the ``canonical_json``
     column from the table produced by
-    :func:`sqlite_store.jsonstore.main.create_json_table`.
+    :func:`sqlite_store.jsonstore.table.create_json_table`.
     """
 
     conn.execute(

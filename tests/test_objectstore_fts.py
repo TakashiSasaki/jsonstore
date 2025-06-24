@@ -3,7 +3,7 @@ import sys
 import sqlite3
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from sqlite_store.objectstore.main import create_object_table, insert_object
+from sqlite_store.objectstore.table import create_object_table, insert_object
 from sqlite_store.objectstore.view import create_property_concat_view
 from sqlite_store.objectstore.fts import create_property_concat_fts
 

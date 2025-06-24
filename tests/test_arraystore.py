@@ -6,7 +6,7 @@ import sqlite3
 import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from sqlite_store.arraystore.main import (
+from sqlite_store.arraystore.table import (
     create_array_table,
     insert_array,
     insert_array_auto_hash,

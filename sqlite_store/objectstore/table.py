@@ -1,4 +1,4 @@
-# main.py for objectstore
+# table.py for objectstore
 
 import sqlite3
 import json

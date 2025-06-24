@@ -1,6 +1,6 @@
 """Public API for the :mod:`sqlite_store.arraystore` package."""
 
-from .main import (
+from .table import (
     create_array_table,
     insert_array,
     insert_array_auto_hash,
