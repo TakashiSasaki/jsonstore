@@ -80,6 +80,23 @@ def test_method1_object_array():
     conn.close()
 
 
+def test_custom_table_name():
+    """Test using a custom table name for storage and retrieval."""
+    custom_table = "custom_elements"
+    test_array = [1, 2, 3]
+    array_hash = "custom_table_test"
+
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_array_table(conn, table_name=custom_table)
+    insert_array(conn, array_hash, test_array, table_name=custom_table)
+    result = retrieve_array(conn, array_hash, table_name=custom_table)
+
+    assert result == test_array
+    conn.close()
+
+
 if __name__ == "__main__":
     test_method1_storage()
     test_method1_nested_array()
