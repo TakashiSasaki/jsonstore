@@ -10,6 +10,7 @@ from sqlite_store.arraystore.main import (
     create_array_table,
     insert_array,
     insert_array_auto_hash,
+    insert_arrays_auto_hash,
     retrieve_array,
 )
 from sqlite_store import canonical_json
@@ -144,6 +145,24 @@ def test_element_json_canonical():
 
     for idx, json_val in rows:
         assert json_val == canonical_json(data[idx])
+    conn.close()
+
+
+def test_insert_arrays_auto_hash():
+    """Insert multiple arrays in a single call."""
+    arrays = [[1, 2], [True, False, None]]
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_array_table(conn)
+    hashes = insert_arrays_auto_hash(conn, arrays)
+
+    assert len(hashes) == len(arrays)
+    for arr, cid in zip(arrays, hashes):
+        restored = retrieve_array(conn, cid)
+        expected = hashlib.sha1(canonical_json(arr).encode("utf-8")).hexdigest()
+        assert cid == expected
+        assert restored == arr
     conn.close()
 
 
