@@ -3,11 +3,12 @@
 import sqlite3
 import json
 import hashlib
+from typing import Any, List
 
 from canonicaljson import canonical_json
 
 
-def _canonical_json(obj) -> str:
+def _canonical_json(obj: Any) -> str:
     """Return JSON canonical form used for hashing.
 
     The implementation follows the JSON Canonicalization Scheme (JCS)
@@ -19,7 +20,7 @@ def _canonical_json(obj) -> str:
 
     return canonical_json(obj)
 
-def create_array_table(conn, table_name: str = "arraystore"):
+def create_array_table(conn: sqlite3.Connection, table_name: str = "arraystore") -> None:
     """Create table and indexes to store array elements.
 
     Parameters
@@ -44,7 +45,12 @@ def create_array_table(conn, table_name: str = "arraystore"):
     )
     conn.commit()
 
-def insert_array(conn, canonical_json_sha1, array, table_name: str = "arraystore"):
+def insert_array(
+    conn: sqlite3.Connection,
+    canonical_json_sha1: str,
+    array: List[Any],
+    table_name: str = "arraystore",
+) -> None:
     """Insert array into table using canonical JSON for each element."""
     cur = conn.cursor()
     for idx, val in enumerate(array):
@@ -57,7 +63,9 @@ def insert_array(conn, canonical_json_sha1, array, table_name: str = "arraystore
     conn.commit()
 
 
-def insert_array_auto_hash(conn, array, table_name: str = "arraystore"):
+def insert_array_auto_hash(
+    conn: sqlite3.Connection, array: List[Any], table_name: str = "arraystore"
+) -> str:
     """Insert array and compute canonical JSON SHA1 internally.
 
     Parameters
@@ -80,7 +88,9 @@ def insert_array_auto_hash(conn, array, table_name: str = "arraystore"):
     insert_array(conn, canonical_json_sha1, array, table_name=table_name)
     return canonical_json_sha1
 
-def retrieve_array(conn, canonical_json_sha1, table_name: str = "arraystore"):
+def retrieve_array(
+    conn: sqlite3.Connection, canonical_json_sha1: str, table_name: str = "arraystore"
+) -> List[Any]:
     """Retrieve array as Python list with preserved types."""
     cur = conn.cursor()
     cur.execute(
