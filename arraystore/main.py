@@ -45,11 +45,11 @@ def create_array_table(conn, table_name: str = "arraystore"):
     conn.commit()
 
 def insert_array(conn, canonical_json_sha1, array, table_name: str = "arraystore"):
-    """Insert array into table using json.dumps to preserve types."""
+    """Insert array into table using canonical JSON for each element."""
     cur = conn.cursor()
     for idx, val in enumerate(array):
-        # Store JSON literal representation
-        value = 'null' if val is None else json.dumps(val)
+        # Store canonical JSON literal representation of each element
+        value = canonical_json(val)
         cur.execute(
             f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, element_index, element_json) VALUES (?, ?, ?)",
             (canonical_json_sha1, idx, value)
