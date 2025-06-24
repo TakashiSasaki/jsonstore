@@ -28,16 +28,16 @@ from arraystore.main import create_array_table, insert_array, retrieve_array
 conn = sqlite3.connect("example.db")
 conn.row_factory = sqlite3.Row
 
-# テーブル作成
-create_array_table(conn)
+# テーブル作成（任意でテーブル名を指定）
+create_array_table(conn, table_name="my_arrays")
 
 # 配列を保存
 my_array = [42, 3.14, None, True, False, "hello", [1, 2], {"a": 1}]
 array_hash = "my_array_hash"
-insert_array(conn, array_hash, my_array)
+insert_array(conn, array_hash, my_array, table_name="my_arrays")
 
 # 配列を復元
-restored = retrieve_array(conn, array_hash)
+restored = retrieve_array(conn, array_hash, table_name="my_arrays")
 print(restored)  # 元の配列と同じ型・値で復元されます
 
 conn.close()
@@ -45,14 +45,14 @@ conn.close()
 
 ## API
 
-- [`create_array_table(conn)`](arraystore/main.py):  
-  配列格納用テーブルを作成します。
+- [`create_array_table(conn, table_name="array_elements")`](arraystore/main.py):
+  配列格納用テーブルを作成します。`table_name` で任意のテーブル名を指定できます。
 
-- [`insert_array(conn, array_hash, array)`](arraystore/main.py):  
-  配列を指定ハッシュ（ID）で保存します。
+- [`insert_array(conn, array_hash, array, table_name="array_elements")`](arraystore/main.py):
+  配列を指定ハッシュ（ID）で保存します。`table_name` で保存先テーブルを指定します。
 
-- [`retrieve_array(conn, array_hash)`](arraystore/main.py):  
-  指定ハッシュの配列を復元します。
+- [`retrieve_array(conn, array_hash, table_name="array_elements")`](arraystore/main.py):
+  指定ハッシュの配列を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
 
 ## テスト
 
