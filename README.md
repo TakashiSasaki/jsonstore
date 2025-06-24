@@ -24,7 +24,12 @@ poetry install
 
 ```python
 import sqlite3
-from sqlite_store.arraystore.main import create_array_table, insert_array, insert_array_auto_hash, retrieve_array
+from sqlite_store.arraystore import (
+    create_array_table,
+    insert_array,
+    insert_array_auto_hash,
+    retrieve_array,
+)
 
 # SQLite接続
 conn = sqlite3.connect("example.db")
@@ -52,7 +57,11 @@ conn.close()
 
 ```python
 import sqlite3
-from sqlite_store.objectstore.main import create_object_table, insert_object, retrieve_object
+from sqlite_store.objectstore import (
+    create_object_table,
+    insert_object,
+    retrieve_object,
+)
 
 conn = sqlite3.connect("example.db")
 conn.row_factory = sqlite3.Row
