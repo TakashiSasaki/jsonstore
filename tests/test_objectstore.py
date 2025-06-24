@@ -11,6 +11,7 @@ from objectstore.main import (
     insert_object_auto_hash,
     retrieve_object,
 )
+from canonicaljson import canonical_json
 
 
 def test_object_storage():
@@ -93,4 +94,32 @@ def test_insert_object_auto_hash():
 
     assert computed_hash == expected_hash
     assert result == obj
+    conn.close()
+
+
+def test_property_json_is_canonical():
+    """Ensure stored JSON uses canonical form."""
+    obj = {
+        "unsorted": {"b": 1, "a": 2},
+        "array": [1, 2.0, -0.0],
+        "nullval": None,
+    }
+    hash_id = "canonprop"
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_object_table(conn)
+    insert_object(conn, hash_id, obj)
+
+    cur = conn.cursor()
+    cur.execute(
+        "SELECT property_name, property_json FROM objectstore WHERE canonical_json_sha1 = ?",
+        (hash_id,),
+    )
+    rows = cur.fetchall()
+
+    for row in rows:
+        name = row[0]
+        stored = row[1]
+        assert stored == canonical_json(obj[name])
     conn.close()

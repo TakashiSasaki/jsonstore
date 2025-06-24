@@ -49,7 +49,7 @@ def insert_object(conn: sqlite3.Connection, canonical_json_sha1, obj: dict, tabl
     """Insert a Python dict into the table preserving JSON types."""
     cur = conn.cursor()
     for key, val in obj.items():
-        value = 'null' if val is None else json.dumps(val)
+        value = canonical_json(val)
         cur.execute(
             f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, property_name, property_json) VALUES (?, ?, ?)",
             (canonical_json_sha1, key, value),
