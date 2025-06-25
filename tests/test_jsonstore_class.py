@@ -51,3 +51,19 @@ def test_class_custom_names():
     row = cur.fetchone()
     assert row[0] == cid
     conn.close()
+
+
+def test_class_retrieve_all_json():
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    store = JsonStore(conn)
+
+    data = [{"v": i} for i in range(5)]
+    for obj in data:
+        store.insert_json_auto_hash(obj)
+
+    records = store.retrieve_all_json()
+    records_sorted = sorted(records, key=lambda x: x["v"])
+
+    assert records_sorted == data
+    conn.close()
