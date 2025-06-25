@@ -6,6 +6,7 @@ from .table import (
     insert_json,
     insert_json_auto_hash,
     retrieve_json,
+    retrieve_all_json,
 )
 from .fts import create_json_fts
 
@@ -46,6 +47,12 @@ class JsonStore:
         return retrieve_json(
             self.conn,
             canonical_json_sha1,
+            table_name=self.table_name,
+        )
+
+    def retrieve_all_json(self) -> list:
+        return retrieve_all_json(
+            self.conn,
             table_name=self.table_name,
         )
 

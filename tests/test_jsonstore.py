@@ -11,6 +11,7 @@ from jsonstore.jsonstore.table import (
     insert_json,
     insert_json_auto_hash,
     retrieve_json,
+    retrieve_all_json,
 )
 from jsonstore import canonical_json
 
@@ -122,4 +123,20 @@ def test_large_random_unicode_strings():
         restored = retrieve_json(conn, cid, table_name="jsonstore")
         assert restored == original
 
+    conn.close()
+
+
+def test_retrieve_all_json():
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_json_table(conn, table_name="jsonstore")
+    data = [{"id": i} for i in range(3)]
+    for obj in data:
+        insert_json_auto_hash(conn, obj, table_name="jsonstore")
+
+    records = retrieve_all_json(conn, table_name="jsonstore")
+    records_sorted = sorted(records, key=lambda x: x["id"])
+
+    assert records_sorted == data
     conn.close()
