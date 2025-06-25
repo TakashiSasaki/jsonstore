@@ -180,6 +180,7 @@ canonical_str = canonical_json({"b": 1, "a": True})
 - [`create_json_table(conn, table_name="jsonstore")`](jsonstore/jsonstore/table.py): JSON全体を保存するテーブルを作成します.
 - [`insert_json(conn, canonical_json_sha1, obj, table_name="jsonstore")`](jsonstore/jsonstore/table.py): JSONを指定ハッシュで保存します.
 - [`insert_json_auto_hash(conn, obj, table_name="jsonstore")`](jsonstore/jsonstore/table.py): JSON保存時にSHA1を自動計算します.
+- [`insert_jsons_auto_hash(conn, objs, table_name="jsonstore")`](jsonstore/jsonstore/table.py): 複数のJSONを一括保存する際にSHA1を自動計算します. ハッシュ値のリストを返します.
 - [`retrieve_json(conn, canonical_json_sha1, table_name="jsonstore")`](jsonstore/jsonstore/table.py): 保存したJSONを復元します.
 
 ## テスト

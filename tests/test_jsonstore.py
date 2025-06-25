@@ -10,6 +10,7 @@ from jsonstore.jsonstore.table import (
     create_json_table,
     insert_json,
     insert_json_auto_hash,
+    insert_jsons_auto_hash,
     retrieve_json,
     retrieve_all_json,
 )
@@ -139,4 +140,21 @@ def test_retrieve_all_json():
     records_sorted = sorted(records, key=lambda x: x["id"])
 
     assert records_sorted == data
+    conn.close()
+
+
+def test_insert_jsons_auto_hash():
+    objs = [{"a": 1}, [True, False]]
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_json_table(conn, table_name="jsonstore")
+    hashes = insert_jsons_auto_hash(conn, objs, table_name="jsonstore")
+
+    expected = [hashlib.sha1(canonical_json(o).encode("utf-8")).hexdigest() for o in objs]
+
+    assert hashes == expected
+    for h, original in zip(hashes, objs):
+        restored = retrieve_json(conn, h, table_name="jsonstore")
+        assert restored == original
     conn.close()

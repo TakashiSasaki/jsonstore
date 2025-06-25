@@ -1,5 +1,6 @@
 import sqlite3
 import hashlib
+from typing import Any, List
 
 from jsonstore.canonicaljson import canonical_json
 
@@ -56,6 +57,45 @@ def insert_json_auto_hash(conn: sqlite3.Connection, obj, table_name: str) -> str
     return canon_sha1
 
 
+def insert_jsons_auto_hash(
+    conn: sqlite3.Connection, objs: List[Any], table_name: str
+) -> List[str]:
+    """Insert multiple JSON structures computing SHA1 for each.
+
+    Parameters
+    ----------
+    conn : sqlite3.Connection
+        SQLite connection.
+    objs : list[Any]
+        JSON serializable objects to store.
+    table_name : str
+        Name of the table.
+
+    Returns
+    -------
+    list[str]
+        SHA1 hashes for each object in the same order as ``objs``.
+    """
+
+    hashes: List[str] = []
+    rows = []
+    for obj in objs:
+        canon = _canonical_json(obj)
+        sha1 = hashlib.sha1(canon.encode("utf-8")).hexdigest()
+        hashes.append(sha1)
+        rows.append((sha1, canon))
+
+    if rows:
+        cur = conn.cursor()
+        cur.executemany(
+            f"INSERT OR REPLACE INTO {table_name} (canonical_json_sha1, canonical_json) VALUES (?, ?)",
+            rows,
+        )
+        conn.commit()
+
+    return hashes
+
+
 def retrieve_json(conn: sqlite3.Connection, canonical_json_sha1: str, table_name: str):
     """Retrieve JSON structure previously stored."""
     cur = conn.cursor()
@@ -76,4 +116,5 @@ def retrieve_all_json(conn: sqlite3.Connection, table_name: str):
     rows = cur.fetchall()
     import json
     return [json.loads(r[0]) for r in rows]
+
 

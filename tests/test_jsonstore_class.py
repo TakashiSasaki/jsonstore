@@ -67,3 +67,16 @@ def test_class_retrieve_all_json():
 
     assert records_sorted == data
     conn.close()
+
+
+def test_class_insert_jsons_auto_hash():
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    store = JsonStore(conn)
+    objs = [{"a": 1}, [1, 2]]
+    hashes = store.insert_jsons_auto_hash(objs)
+    assert len(hashes) == len(objs)
+    for obj, cid in zip(objs, hashes):
+        restored = store.retrieve_json(cid)
+        assert restored == obj
+    conn.close()

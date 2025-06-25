@@ -1,10 +1,11 @@
 import sqlite3
-from typing import Any, Optional
+from typing import Any, List, Optional
 
 from .table import (
     create_json_table,
     insert_json,
     insert_json_auto_hash,
+    insert_jsons_auto_hash,
     retrieve_json,
     retrieve_all_json,
 )
@@ -40,6 +41,14 @@ class JsonStore:
         return insert_json_auto_hash(
             self.conn,
             obj,
+            table_name=self.table_name,
+        )
+
+    def insert_jsons_auto_hash(self, objs: list[Any]) -> list[str]:
+        """Insert multiple JSON objects computing SHA1 for each."""
+        return insert_jsons_auto_hash(
+            self.conn,
+            objs,
             table_name=self.table_name,
         )
 
