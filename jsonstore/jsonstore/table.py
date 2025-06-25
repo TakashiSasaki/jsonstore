@@ -68,3 +68,12 @@ def retrieve_json(conn: sqlite3.Connection, canonical_json_sha1: str, table_name
 
     return json.loads(row[0]) if row else None
 
+
+def retrieve_all_json(conn: sqlite3.Connection, table_name: str):
+    """Return all JSON records stored in ``table_name`` as a list."""
+    cur = conn.cursor()
+    cur.execute(f"SELECT canonical_json FROM {table_name}")
+    rows = cur.fetchall()
+    import json
+    return [json.loads(r[0]) for r in rows]
+
