@@ -7,6 +7,7 @@ from .table import (
     insert_object_auto_hash,
     insert_objects_auto_hash,
     retrieve_object,
+    retrieve_all_objects,
 )
 from .view import create_property_concat_view
 from .fts import create_property_concat_fts
@@ -66,6 +67,12 @@ class ObjectStore:
         return retrieve_object(
             self.conn,
             canonical_json_sha1,
+            table_name=self.table_name,
+        )
+
+    def retrieve_all_objects(self) -> List[Dict[str, Any]]:
+        return retrieve_all_objects(
+            self.conn,
             table_name=self.table_name,
         )
 

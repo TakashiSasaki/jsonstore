@@ -63,3 +63,19 @@ def test_class_custom_names():
     row = cur.fetchone()
     assert row[0] == "\"y\""
     conn.close()
+
+
+def test_class_retrieve_all_objects():
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    store = ObjectStore(conn)
+
+    data = [{"n": i} for i in range(4)]
+    for obj in data:
+        store.insert_object_auto_hash(obj)
+
+    records = store.retrieve_all_objects()
+    records_sorted = sorted(records, key=lambda x: x["n"])
+
+    assert records_sorted == data
+    conn.close()
