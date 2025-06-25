@@ -1,7 +1,7 @@
 import sqlite3
 import hashlib
 
-from sqlite_store.canonicaljson import canonical_json
+from jsonstore.canonicaljson import canonical_json
 
 
 def _canonical_json(obj) -> str:

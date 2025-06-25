@@ -6,14 +6,14 @@ import sqlite3
 import json
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from sqlite_store.arraystore.table import (
+from jsonstore.arraystore.table import (
     create_array_table,
     insert_array,
     insert_array_auto_hash,
     insert_arrays_auto_hash,
     retrieve_array,
 )
-from sqlite_store import canonical_json
+from jsonstore import canonical_json
 import hashlib
 
 

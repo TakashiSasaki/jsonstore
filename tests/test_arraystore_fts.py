@@ -3,9 +3,9 @@ import sys
 import sqlite3
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from sqlite_store.arraystore.table import create_array_table, insert_array
-from sqlite_store.arraystore.view import create_element_concat_view
-from sqlite_store.arraystore.fts import create_element_concat_fts
+from jsonstore.arraystore.table import create_array_table, insert_array
+from jsonstore.arraystore.view import create_element_concat_view
+from jsonstore.arraystore.fts import create_element_concat_fts
 
 
 def test_element_concat_fts_search():

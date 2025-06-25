@@ -3,8 +3,8 @@ import sys
 import sqlite3
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from sqlite_store.jsonstore.table import create_json_table, insert_json
-from sqlite_store.jsonstore.fts import create_json_fts
+from jsonstore.jsonstore.table import create_json_table, insert_json
+from jsonstore.jsonstore.fts import create_json_fts
 
 
 def test_json_fts_search():

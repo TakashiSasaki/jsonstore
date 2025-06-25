@@ -1,4 +1,4 @@
-"""Public API for the :mod:`sqlite_store.jsonstore` package."""
+"""Public API for the :mod:`jsonstore.jsonstore` package."""
 
 from .table import (
     create_json_table,

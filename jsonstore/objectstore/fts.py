@@ -10,7 +10,7 @@ def create_property_concat_fts(
 
     This function creates an FTS5 table that indexes the space-joined
     JSON property strings produced by
-    :func:`sqlite_store.objectstore.view.create_property_concat_view`.
+    :func:`jsonstore.objectstore.view.create_property_concat_view`.
     """
 
     conn.execute(

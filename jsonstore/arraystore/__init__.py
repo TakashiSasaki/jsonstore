@@ -1,4 +1,4 @@
-"""Public API for the :mod:`sqlite_store.arraystore` package."""
+"""Public API for the :mod:`jsonstore.arraystore` package."""
 
 from .table import (
     create_array_table,

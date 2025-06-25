@@ -10,7 +10,7 @@ def create_element_concat_fts(
 
     This creates an FTS5 table that allows full-text search over the
     space-joined JSON element strings produced by
-    :func:`sqlite_store.arraystore.view.create_element_concat_view`.
+    :func:`jsonstore.arraystore.view.create_element_concat_view`.
     """
 
     conn.execute(
