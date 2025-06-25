@@ -147,3 +147,30 @@ def retrieve_object(
     for row in rows:
         result[row[0]] = json.loads(row[1]) if row[1] is not None else None
     return result
+
+
+def retrieve_all_objects(conn: sqlite3.Connection, table_name: str) -> List[Dict[str, Any]]:
+    """Return all objects stored in ``table_name`` as a list of dicts."""
+    cur = conn.cursor()
+    cur.execute(
+        f"SELECT canonical_json_sha1, property_name, property_json FROM {table_name} ORDER BY canonical_json_sha1"
+    )
+    rows = cur.fetchall()
+
+    results: List[Dict[str, Any]] = []
+    current_hash = None
+    current_obj: Dict[str, Any] = {}
+
+    for row in rows:
+        obj_hash = row[0]
+        if obj_hash != current_hash:
+            if current_hash is not None:
+                results.append(current_obj)
+            current_obj = {}
+            current_hash = obj_hash
+        current_obj[row[1]] = json.loads(row[2]) if row[2] is not None else None
+
+    if current_hash is not None:
+        results.append(current_obj)
+
+    return results

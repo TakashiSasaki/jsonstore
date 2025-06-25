@@ -6,6 +6,7 @@ from .table import (
     insert_object_auto_hash,
     insert_objects_auto_hash,
     retrieve_object,
+    retrieve_all_objects,
 )
 from .view import create_property_concat_view
 from .fts import create_property_concat_fts
@@ -17,6 +18,7 @@ __all__ = [
     "insert_object_auto_hash",
     "insert_objects_auto_hash",
     "retrieve_object",
+    "retrieve_all_objects",
     "create_property_concat_view",
     "create_property_concat_fts",
     "ObjectStore",

@@ -11,6 +11,7 @@ from jsonstore.objectstore.table import (
     insert_object_auto_hash,
     insert_objects_auto_hash,
     retrieve_object,
+    retrieve_all_objects,
 )
 from jsonstore import canonical_json
 
@@ -147,4 +148,20 @@ def test_insert_objects_auto_hash():
     for h, original in zip(hashes, objs):
         restored = retrieve_object(conn, h, table_name="objectstore")
         assert restored == original
+    conn.close()
+
+
+def test_retrieve_all_objects():
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_object_table(conn, table_name="objectstore")
+    data = [{"v": i} for i in range(3)]
+    for obj in data:
+        insert_object_auto_hash(conn, obj, table_name="objectstore")
+
+    records = retrieve_all_objects(conn, table_name="objectstore")
+    records_sorted = sorted(records, key=lambda x: x["v"])
+
+    assert records_sorted == data
     conn.close()

@@ -177,6 +177,8 @@ canonical_str = canonical_json({"b": 1, "a": True})
 
 - [`retrieve_object(conn, canonical_json_sha1, table_name="objectstore")`](jsonstore/objectstore/table.py):
   指定ハッシュの辞書を復元します。`table_name` を揃えることで任意のテーブルから取得できます。
+- [`retrieve_all_objects(conn, table_name="objectstore")`](jsonstore/objectstore/table.py):
+  テーブル内のすべての辞書をリストで取得します。
 - [`create_json_table(conn, table_name="jsonstore")`](jsonstore/jsonstore/table.py): JSON全体を保存するテーブルを作成します.
 - [`insert_json(conn, canonical_json_sha1, obj, table_name="jsonstore")`](jsonstore/jsonstore/table.py): JSONを指定ハッシュで保存します.
 - [`insert_json_auto_hash(conn, obj, table_name="jsonstore")`](jsonstore/jsonstore/table.py): JSON保存時にSHA1を自動計算します.
