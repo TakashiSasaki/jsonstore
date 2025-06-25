@@ -146,3 +146,17 @@ def retrieve_array(
     )
     row = cur.fetchone()
     return json.loads(row['json_array']) if row else []
+
+
+def retrieve_all_arrays(conn: sqlite3.Connection, table_name: str) -> List[List[Any]]:
+    """Return all arrays stored in ``table_name`` as a list of lists."""
+    cur = conn.cursor()
+    cur.execute(
+        f"""
+        SELECT '[' || GROUP_CONCAT(element_json, ',') || ']' AS json_array
+        FROM {table_name}
+        GROUP BY canonical_json_sha1;
+    """
+    )
+    rows = cur.fetchall()
+    return [json.loads(row['json_array']) for row in rows]

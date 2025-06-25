@@ -12,6 +12,7 @@ from jsonstore.arraystore.table import (
     insert_array_auto_hash,
     insert_arrays_auto_hash,
     retrieve_array,
+    retrieve_all_arrays,
 )
 from jsonstore import canonical_json
 import hashlib
@@ -166,6 +167,22 @@ def test_insert_arrays_auto_hash():
         expected = hashlib.sha1(canonical_json(arr).encode("utf-8")).hexdigest()
         assert cid == expected
         assert restored == arr
+    conn.close()
+
+
+def test_retrieve_all_arrays():
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+
+    create_array_table(conn, table_name="arraystore")
+    arrays = [[i] for i in range(3)]
+    for arr in arrays:
+        insert_array_auto_hash(conn, arr, table_name="arraystore")
+
+    records = retrieve_all_arrays(conn, table_name="arraystore")
+    records_sorted = sorted(records, key=lambda x: x[0])
+
+    assert records_sorted == arrays
     conn.close()
 
 
