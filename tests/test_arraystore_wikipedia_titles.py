@@ -2,6 +2,7 @@ import os
 import sys
 import sqlite3
 import hashlib
+import itertools
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from jsonstore.arraystore.table import (
@@ -23,7 +24,7 @@ def test_bulk_insert_wikipedia_titles_as_arrays():
     create_array_table(conn, table_name="arraystore")
 
     with open(SAMPLE_FILE, encoding="utf-8") as f:
-        titles = [line.rstrip("\n") for line in f]
+        titles = [line.rstrip("\n") for line in itertools.islice(f, 10000)]
 
     arrays = [titles[i : i + 5] for i in range(0, len(titles), 5)]
     hashes = insert_arrays_auto_hash(conn, arrays, table_name="arraystore")

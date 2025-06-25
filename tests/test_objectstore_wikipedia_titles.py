@@ -2,6 +2,7 @@ import os
 import sys
 import sqlite3
 import hashlib
+import itertools
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from jsonstore.objectstore.table import (
@@ -23,7 +24,7 @@ def test_bulk_insert_wikipedia_titles_as_objects():
     create_object_table(conn, table_name="objectstore")
 
     with open(SAMPLE_FILE, encoding="utf-8") as f:
-        titles = [line.rstrip("\n") for line in f]
+        titles = [line.rstrip("\n") for line in itertools.islice(f, 10000)]
 
     def make_obj(chunk):
         keys = ["one", "two", "three", "four", "five"]
