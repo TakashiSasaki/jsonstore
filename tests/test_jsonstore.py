@@ -6,13 +6,13 @@ import hashlib
 import random
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from sqlite_store.jsonstore.table import (
+from jsonstore.jsonstore.table import (
     create_json_table,
     insert_json,
     insert_json_auto_hash,
     retrieve_json,
 )
-from sqlite_store import canonical_json
+from jsonstore import canonical_json
 
 
 def test_json_storage():

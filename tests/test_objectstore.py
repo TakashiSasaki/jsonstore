@@ -5,14 +5,14 @@ import json
 import hashlib
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from sqlite_store.objectstore.table import (
+from jsonstore.objectstore.table import (
     create_object_table,
     insert_object,
     insert_object_auto_hash,
     insert_objects_auto_hash,
     retrieve_object,
 )
-from sqlite_store import canonical_json
+from jsonstore import canonical_json
 
 
 def test_object_storage():

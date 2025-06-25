@@ -4,8 +4,8 @@ import sqlite3
 import hashlib
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from sqlite_store.objectstore.store import ObjectStore  # noqa: E402
-from sqlite_store import canonical_json  # noqa: E402
+from jsonstore.objectstore.store import ObjectStore  # noqa: E402
+from jsonstore import canonical_json  # noqa: E402
 
 
 def test_class_basic_storage():

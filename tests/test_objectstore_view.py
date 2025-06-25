@@ -3,11 +3,11 @@ import sys
 import sqlite3
 
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
-from sqlite_store.objectstore.table import (
+from jsonstore.objectstore.table import (
     create_object_table,
     insert_object,
 )
-from sqlite_store.objectstore.view import create_property_concat_view
+from jsonstore.objectstore.view import create_property_concat_view
 
 
 def test_property_concat_view_default():

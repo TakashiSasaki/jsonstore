@@ -1,4 +1,4 @@
-"""Top-level package for the sqlite_store distribution."""
+"""Top-level package for the jsonstore distribution."""
 
 from .canonicaljson import canonical_json
 

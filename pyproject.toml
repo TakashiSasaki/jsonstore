@@ -1,11 +1,11 @@
 [tool.poetry]
-name = "sqlite_store"
+name = "jsonstore"
 version = "0.1.0"
 description = "A library to store and retrieve Python lists/arrays in SQLite using JSON."
 authors = ["Takashi Sasaki <takashi316@gmail.com>"]
 readme = "README.md"
 packages = [
-    {include = "sqlite_store"}
+    {include = "jsonstore"}
 ]
 
 [tool.poetry.dependencies]
