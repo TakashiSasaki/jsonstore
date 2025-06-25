@@ -6,6 +6,7 @@ from .table import (
     insert_array_auto_hash,
     insert_arrays_auto_hash,
     retrieve_array,
+    retrieve_all_arrays,
 )
 from .view import create_element_concat_view
 from .fts import create_element_concat_fts
@@ -17,6 +18,7 @@ __all__ = [
     "insert_array_auto_hash",
     "insert_arrays_auto_hash",
     "retrieve_array",
+    "retrieve_all_arrays",
     "create_element_concat_view",
     "create_element_concat_fts",
     "ArrayStore",

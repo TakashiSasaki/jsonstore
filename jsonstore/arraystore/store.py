@@ -7,6 +7,7 @@ from .table import (
     insert_array_auto_hash,
     insert_arrays_auto_hash,
     retrieve_array,
+    retrieve_all_arrays,
 )
 from .view import create_element_concat_view
 from .fts import create_element_concat_fts
@@ -66,6 +67,13 @@ class ArrayStore:
         return retrieve_array(
             self.conn,
             canonical_json_sha1,
+            table_name=self.table_name,
+        )
+
+    def retrieve_all_arrays(self) -> List[List[Any]]:
+        """Return all arrays stored in this :class:`ArrayStore`."""
+        return retrieve_all_arrays(
+            self.conn,
             table_name=self.table_name,
         )
 

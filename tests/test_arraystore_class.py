@@ -64,3 +64,19 @@ def test_class_custom_names():
     assert row[0] == "\"x\""
     conn.close()
 
+
+def test_class_retrieve_all_arrays():
+    conn = sqlite3.connect(":memory:")
+    conn.row_factory = sqlite3.Row
+    store = ArrayStore(conn)
+
+    arrays = [[i] for i in range(4)]
+    for arr in arrays:
+        store.insert_array_auto_hash(arr)
+
+    records = store.retrieve_all_arrays()
+    records_sorted = sorted(records, key=lambda x: x[0])
+
+    assert records_sorted == arrays
+    conn.close()
+
