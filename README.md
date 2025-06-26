@@ -20,6 +20,29 @@ pip install .
 poetry install
 ```
 
+### httpimport を利用したリモートインポート
+
+`httpimport` を使うと、GitHub 上のリポジトリから直接このパッケージを
+インポートして利用することもできます。以下は基本的な例です。
+
+```python
+from httpimport import github_repo
+
+with github_repo('TakashiSasaki', 'jsonstore', ref='master'):
+    from jsonstore import canonical_json
+    from jsonstore.jsonstore.store import JsonStore
+    import sqlite3
+
+    data = {'b': 1, 'a': [True, None]}
+    print('canonical_json:', canonical_json(data))
+    conn = sqlite3.connect(':memory:')
+    conn.row_factory = sqlite3.Row
+    store = JsonStore(conn)
+    sha1 = store.insert_json_auto_hash(data)
+    retrieved = store.retrieve_json(sha1)
+    print('retrieved:', retrieved)
+```
+
 ## 使い方
 
 ```python
